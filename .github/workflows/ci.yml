@@ -45,6 +45,35 @@ jobs:
             CODE_SIGNING_REQUIRED=NO \
             CODE_SIGN_IDENTITY=""
 
+      - name: Inspect app bundle
+        run: |
+          APP=build/Build/Products/Release-iphoneos/SegmentationValidator.app
+          plutil -p "$APP/Info.plist"
+          ls -d "$APP"/*.lproj
+          plutil -p "$APP/de.lproj/Localizable.strings" | head -n 5
+          plutil -p "$APP/de.lproj/InfoPlist.strings"
+
+      - name: Check strings are translated
+        run: python3 scripts/check_strings.py
+
+      - name: Build with the newest installed Xcode
+        run: |
+          NEWEST=$(python3 -c '
+          import glob, re
+          apps = [a for a in glob.glob("/Applications/Xcode_*.app") if re.fullmatch(r".*/Xcode_[0-9.]+\.app", a)]
+          print(max(apps, key=lambda a: [int(x) for x in re.findall(r"[0-9]+", a.rsplit("/", 1)[1])]))
+          ')
+          sudo xcode-select -s "$NEWEST"
+          xcodebuild -version
+          xcodebuild build \
+            -quiet \
+            -project SegmentationValidator.xcodeproj \
+            -scheme SegmentationValidator \
+            -configuration Debug \
+            -destination 'generic/platform=iOS' \
+            -derivedDataPath build-newest \
+            CODE_SIGNING_ALLOWED=NO
+
       - name: Package unsigned IPA
         run: |
           mkdir -p Payload

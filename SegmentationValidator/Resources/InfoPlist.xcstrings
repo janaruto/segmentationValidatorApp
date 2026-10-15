@@ -1,0 +1,74 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "CFBundleDisplayName" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Segmente"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Segments"
+          }
+        }
+      }
+    },
+    "NSLocationAlwaysAndWhenInUseUsageDescription" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Optional: iOS weckt die App, wenn du dich ein paar hundert Meter bewegst, damit Erinnerungen pünktlich kommen. Dein Standort wird nie gespeichert oder geteilt."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Optional: iOS wakes the app when you move a few hundred meters, so movement reminders arrive on time. Your location is never stored or shared."
+          }
+        }
+      }
+    },
+    "NSLocationWhenInUseUsageDescription" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Optional: iOS weckt die App, wenn du dich ein paar hundert Meter bewegst, damit Erinnerungen pünktlich kommen. Dein Standort wird nie gespeichert oder geteilt."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Optional: iOS wakes the app when you move a few hundred meters, so movement reminders arrive on time. Your location is never stored or shared."
+          }
+        }
+      }
+    },
+    "NSMotionUsageDescription" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Der Bewegungssensor erkennt, wenn du dich in Bewegung setzt. So kann die App dich ans Erfassen des Segments erinnern und Start- und Endzeit vorschlagen."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The motion sensor detects when you start moving, so the app can remind you to log the segment and suggest its start and end time."
+          }
+        }
+      }
+    }
+  },
+  "version" : "1.0"
+}

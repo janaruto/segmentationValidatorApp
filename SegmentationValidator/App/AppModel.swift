@@ -139,6 +139,9 @@ final class AppModel {
                 self?.loadSegmentsIfNeeded()
             }
         }
+        #if DEBUG
+        applyDebugLaunchOptions()
+        #endif
     }
 
     // MARK: - Preferences
@@ -376,6 +379,12 @@ final class AppModel {
     func refreshDetections(for day: Date) async {
         let calendar = Calendar.current
         let dayStart = calendar.startOfDay(for: day)
+        #if DEBUG
+        if defaults.bool(forKey: "debugFakeDetections") {
+            detectedRuns[dayStart] = calendar.isDateInToday(dayStart) ? DemoData.detectedRuns(now: .now) : []
+            return
+        }
+        #endif
         guard motion.permission == .authorized else {
             detectedRuns[dayStart] = nil
             return
@@ -672,6 +681,35 @@ final class AppModel {
     func typesByDay(in interval: DateInterval) -> [Date: [MovementType]] {
         book.typesByDay(within: interval, calendar: .current, now: .now)
     }
+
+    // MARK: - Debug launch options
+
+    #if DEBUG
+    /// See DemoData for the supported launch arguments.
+    private func applyDebugLaunchOptions() {
+        if defaults.bool(forKey: "debugSeedDemoData"), isDataLoaded, book.segments.isEmpty {
+            commit(SegmentBook(segments: DemoData.segments(now: .now, calendar: .current)))
+        }
+        if defaults.bool(forKey: "debugShowYesterday") {
+            selectedDay = Calendar.current.date(byAdding: .day, value: -1, to: selectedDay) ?? selectedDay
+        }
+        switch defaults.string(forKey: "debugInitialTab") {
+        case "history": selectedTab = .history
+        case "export": selectedTab = .export
+        case "settings": selectedTab = .settings
+        default: break
+        }
+        switch defaults.string(forKey: "debugOpenEditor") {
+        case "reminder":
+            let reminder = DemoData.reminder(now: .now)
+            showEditor([DraftFactory.draft(for: reminder, now: .now)], origin: .reminder(reminder))
+        case "new":
+            addSegment(on: selectedDay)
+        default:
+            break
+        }
+    }
+    #endif
 
     // MARK: - UserDefaults helpers
 

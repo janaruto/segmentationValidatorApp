@@ -91,7 +91,7 @@ struct MovementTypeGrid: View {
 /// Small red "running" tag.
 struct RunningBadge: View {
     var body: some View {
-        Text("running")
+        Text("live")
             .font(.caption2.weight(.bold))
             .textCase(.uppercase)
             .padding(.horizontal, 6)

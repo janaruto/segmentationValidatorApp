@@ -1,0 +1,2166 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "%1$@ – %2$@, probably %3$@. Tap to log the segment." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ – %2$@, vermutlich %3$@. Tippe, um das Segment zu erfassen."
+          }
+        }
+      }
+    },
+    "%1$lld added, %2$lld updated, %3$lld already known." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$lld hinzugefügt, %2$lld aktualisiert, %3$lld schon vorhanden."
+          }
+        }
+      }
+    },
+    "%1$lld · %2$@ logged" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$lld · %2$@ erfasst"
+          }
+        }
+      }
+    },
+    "%@ (ongoing)" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ (läuft)"
+          }
+        }
+      }
+    },
+    "%@ not logged · tap to fill" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ nicht erfasst · zum Ausfüllen tippen"
+          }
+        }
+      }
+    },
+    "+%lld more movements not logged yet" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "+%lld weitere Bewegungen noch nicht erfasst"
+          }
+        }
+      }
+    },
+    "A reminder was sent recently. The next one follows later." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vor Kurzem wurde schon erinnert. Die nächste Erinnerung folgt später."
+          }
+        }
+      }
+    },
+    "A running segment cannot start in the future." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ein laufendes Segment kann nicht in der Zukunft beginnen."
+          }
+        }
+      }
+    },
+    "A running segment ends when you tap Stop or start another one." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ein laufendes Segment endet, wenn du auf «Stopp» tippst oder ein anderes startest."
+          }
+        }
+      }
+    },
+    "About" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Über die App"
+          }
+        }
+      }
+    },
+    "Add" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hinzufügen"
+          }
+        }
+      }
+    },
+    "Add after" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Danach einfügen"
+          }
+        }
+      }
+    },
+    "Add segment" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Segment hinzufügen"
+          }
+        }
+      }
+    },
+    "Add segment after" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Segment danach einfügen"
+          }
+        }
+      }
+    },
+    "All data is stored only on this iPhone. Export regularly as a backup." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alle Daten sind nur auf diesem iPhone gespeichert. Exportiere regelmässig als Backup."
+          }
+        }
+      }
+    },
+    "Allow" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Erlauben"
+          }
+        }
+      }
+    },
+    "Allow Motion & Fitness access in the iOS Settings to get movement suggestions." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Erlaube «Bewegung & Fitness» in den iOS-Einstellungen, um Bewegungsvorschläge zu erhalten."
+          }
+        }
+      }
+    },
+    "Allow motion access" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zugriff auf Bewegungsdaten erlauben"
+          }
+        }
+      }
+    },
+    "Allow motion access in the Settings tab to get movement suggestions." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Erlaube den Bewegungszugriff im Tab «Einstellungen», um Bewegungsvorschläge zu erhalten."
+          }
+        }
+      }
+    },
+    "Allow notifications" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mitteilungen erlauben"
+          }
+        }
+      }
+    },
+    "Allowed" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Erlaubt"
+          }
+        }
+      }
+    },
+    "Already logged" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bereits erfasst"
+          }
+        }
+      }
+    },
+    "Another segment that starts later is still running." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ein später beginnendes Segment läuft noch."
+          }
+        }
+      }
+    },
+    "Background" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hintergrund"
+          }
+        }
+      }
+    },
+    "Backup and restore" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Backup und Wiederherstellung"
+          }
+        }
+      }
+    },
+    "Bike" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Velo"
+          }
+        }
+      }
+    },
+    "Both" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Beides"
+          }
+        }
+      }
+    },
+    "Bus/Tram" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bus/Tram"
+          }
+        }
+      }
+    },
+    "Cable car" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Seilbahn"
+          }
+        }
+      }
+    },
+    "Cancel" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Abbrechen"
+          }
+        }
+      }
+    },
+    "Cannot save" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Speichern nicht möglich"
+          }
+        }
+      }
+    },
+    "Car" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Auto"
+          }
+        }
+      }
+    },
+    "Change" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ändern"
+          }
+        }
+      }
+    },
+    "Check against your other segments" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Abgleich mit deinen anderen Segmenten"
+          }
+        }
+      }
+    },
+    "Check for movements now" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jetzt nach Bewegungen suchen"
+          }
+        }
+      }
+    },
+    "Choose a day" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tag wählen"
+          }
+        }
+      }
+    },
+    "Choose a movement type." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wähle eine Bewegungsart."
+          }
+        }
+      }
+    },
+    "Comma ( , )" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Komma ( , )"
+          }
+        }
+      }
+    },
+    "Connects seamlessly" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Schliesst nahtlos an"
+          }
+        }
+      }
+    },
+    "Continue" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Weiter"
+          }
+        }
+      }
+    },
+    "Could not save" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Konnte nicht speichern"
+          }
+        }
+      }
+    },
+    "Data" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Daten"
+          }
+        }
+      }
+    },
+    "Data could not be read" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Daten konnten nicht gelesen werden"
+          }
+        }
+      }
+    },
+    "Date" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Datum"
+          }
+        }
+      }
+    },
+    "Day" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tag"
+          }
+        }
+      }
+    },
+    "Days" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tage"
+          }
+        }
+      }
+    },
+    "Days with segments" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tage mit Segmenten"
+          }
+        }
+      }
+    },
+    "Delete" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Löschen"
+          }
+        }
+      }
+    },
+    "Delete all data" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alle Daten löschen"
+          }
+        }
+      }
+    },
+    "Delete all segments?" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alle Segmente löschen?"
+          }
+        }
+      }
+    },
+    "Delete segment" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Segment löschen"
+          }
+        }
+      }
+    },
+    "Delete this segment?" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dieses Segment löschen?"
+          }
+        }
+      }
+    },
+    "Deleted: %@" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gelöscht: %@"
+          }
+        }
+      }
+    },
+    "Detected by the motion sensor" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vom Bewegungssensor erkannt"
+          }
+        }
+      }
+    },
+    "Done" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fertig"
+          }
+        }
+      }
+    },
+    "Duration" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dauer"
+          }
+        }
+      }
+    },
+    "Edit" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bearbeiten"
+          }
+        }
+      }
+    },
+    "Edit segment" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Segment bearbeiten"
+          }
+        }
+      }
+    },
+    "End" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ende"
+          }
+        }
+      }
+    },
+    "End at %@" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ende um %@"
+          }
+        }
+      }
+    },
+    "End now" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jetzt beenden"
+          }
+        }
+      }
+    },
+    "Ends on the next day" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Endet am nächsten Tag"
+          }
+        }
+      }
+    },
+    "Excel compatible (UTF-8 BOM)" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Excel-kompatibel (UTF-8 BOM)"
+          }
+        }
+      }
+    },
+    "Export" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Export"
+          }
+        }
+      }
+    },
+    "Export %lld segments as CSV" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld Segmente als CSV exportieren"
+          }
+        }
+      }
+    },
+    "For Excel with German or Swiss settings choose semicolon and turn on Excel compatible. Python, R and Numbers read the default." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Für Excel mit deutschen oder Schweizer Einstellungen Semikolon wählen und «Excel-kompatibel» einschalten. Python, R und Numbers lesen die Standardeinstellung."
+          }
+        }
+      }
+    },
+    "For every part of your day note when it started, when it ended and how you moved: stationary, walking, bike, bus/tram, train, car, ship, cable car or other. Export everything as CSV whenever you like." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Halte für jeden Abschnitt deines Tages fest, wann er begann, wann er endete und wie du dich bewegt hast: Stillstand, zu Fuss, Velo, Bus/Tram, Zug, Auto, Schiff, Seilbahn oder anderes. Exportiere alles jederzeit als CSV."
+          }
+        }
+      }
+    },
+    "Format" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Format"
+          }
+        }
+      }
+    },
+    "From" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Von"
+          }
+        }
+      }
+    },
+    "Gap %1$@ – %2$@" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lücke %1$@ – %2$@"
+          }
+        }
+      }
+    },
+    "Gap of %@" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lücke von %@"
+          }
+        }
+      }
+    },
+    "Hide" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ausblenden"
+          }
+        }
+      }
+    },
+    "High" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hoch"
+          }
+        }
+      }
+    },
+    "History" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Verlauf"
+          }
+        }
+      }
+    },
+    "Import CSV" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "CSV importieren"
+          }
+        }
+      }
+    },
+    "Imports a CSV exported by this app, e.g. to move your data to a new iPhone. Existing segments are updated, nothing is deleted." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Importiert eine mit dieser App exportierte CSV-Datei, z. B. für den Umzug auf ein neues iPhone. Bestehende Segmente werden aktualisiert, nichts wird gelöscht."
+          }
+        }
+      }
+    },
+    "Include running segment" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Laufendes Segment einschliessen"
+          }
+        }
+      }
+    },
+    "Last check" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Letzte Prüfung"
+          }
+        }
+      }
+    },
+    "Location \"Always\"" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Standort «Immer»"
+          }
+        }
+      }
+    },
+    "Log segment" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Segment erfassen"
+          }
+        }
+      }
+    },
+    "Log your day in segments" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Erfasse deinen Tag in Segmenten"
+          }
+        }
+      }
+    },
+    "Logged segments" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Erfasste Segmente"
+          }
+        }
+      }
+    },
+    "Low" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Niedrig"
+          }
+        }
+      }
+    },
+    "Medium" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mittel"
+          }
+        }
+      }
+    },
+    "Motion & Fitness" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bewegung & Fitness"
+          }
+        }
+      }
+    },
+    "Motion access detects movements, notifications deliver the reminders." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mit dem Bewegungszugriff werden Bewegungen erkannt, Mitteilungen liefern die Erinnerungen."
+          }
+        }
+      }
+    },
+    "Motion access is missing." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Der Zugriff auf Bewegungsdaten fehlt."
+          }
+        }
+      }
+    },
+    "Motion sensor: %@" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bewegungssensor: %@"
+          }
+        }
+      }
+    },
+    "Movement detected" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bewegung erkannt"
+          }
+        }
+      }
+    },
+    "Movement finished" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bewegung beendet"
+          }
+        }
+      }
+    },
+    "Movement reminders" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Erinnerungen bei Bewegung"
+          }
+        }
+      }
+    },
+    "Movement type" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bewegungsart"
+          }
+        }
+      }
+    },
+    "Movements of at least 2 minutes, at most one reminder every 10 minutes." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bewegungen ab 2 Minuten, höchstens eine Erinnerung alle 10 Minuten."
+          }
+        }
+      }
+    },
+    "Movements of at least 5 minutes, at most one reminder every 20 minutes." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bewegungen ab 5 Minuten, höchstens eine Erinnerung alle 20 Minuten."
+          }
+        }
+      }
+    },
+    "New segment" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Neues Segment"
+          }
+        }
+      }
+    },
+    "Next month" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nächster Monat"
+          }
+        }
+      }
+    },
+    "Next segment" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nächstes Segment"
+          }
+        }
+      }
+    },
+    "Next week" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nächste Woche"
+          }
+        }
+      }
+    },
+    "No account, no server, no tracking. Everything stays on this iPhone." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kein Konto, kein Server, kein Tracking. Alles bleibt auf diesem iPhone."
+          }
+        }
+      }
+    },
+    "No earlier segment" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kein früheres Segment"
+          }
+        }
+      }
+    },
+    "No movement detected in the last hours." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "In den letzten Stunden wurde keine Bewegung erkannt."
+          }
+        }
+      }
+    },
+    "No reminders during quiet hours. Movements are still detected and shown in the app." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Während der Ruhezeit gibt es keine Erinnerungen. Bewegungen werden trotzdem erkannt und in der App angezeigt."
+          }
+        }
+      }
+    },
+    "No segments in this month yet." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "In diesem Monat gibt es noch keine Segmente."
+          }
+        }
+      }
+    },
+    "No segments yet" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Noch keine Segmente"
+          }
+        }
+      }
+    },
+    "Not available" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nicht verfügbar"
+          }
+        }
+      }
+    },
+    "Not logged yet. ✓ adds it, ✕ hides it, tap the row to adjust it first." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Noch nicht erfasst. ✓ fügt hinzu, ✕ blendet aus, Tippen auf die Zeile öffnet sie zum Anpassen."
+          }
+        }
+      }
+    },
+    "Note" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Notiz"
+          }
+        }
+      }
+    },
+    "Nothing new: all detected movements are logged or were reminded." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nichts Neues: Alle erkannten Bewegungen sind erfasst oder wurden schon erinnert."
+          }
+        }
+      }
+    },
+    "Notifications" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mitteilungen"
+          }
+        }
+      }
+    },
+    "OK" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OK"
+          }
+        }
+      }
+    },
+    "On the move since %1$@, probably %2$@. Tap to log the segment." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unterwegs seit %1$@, vermutlich %2$@. Tippe, um das Segment zu erfassen."
+          }
+        }
+      }
+    },
+    "Only a date range" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nur einen Zeitraum"
+          }
+        }
+      }
+    },
+    "Only movements of at least 10 minutes, at most one reminder every 45 minutes." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nur Bewegungen ab 10 Minuten, höchstens eine Erinnerung alle 45 Minuten."
+          }
+        }
+      }
+    },
+    "Open Settings" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Einstellungen öffnen"
+          }
+        }
+      }
+    },
+    "Opens a calendar to pick any day" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Öffnet einen Kalender, um einen beliebigen Tag zu wählen"
+          }
+        }
+      }
+    },
+    "Optional note" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Notiz (optional)"
+          }
+        }
+      }
+    },
+    "Optional: reliable reminders" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Optional: zuverlässige Erinnerungen"
+          }
+        }
+      }
+    },
+    "Other" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Andere"
+          }
+        }
+      }
+    },
+    "Overlaps another segment" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Überschneidet sich mit einem anderen Segment"
+          }
+        }
+      }
+    },
+    "Overlaps by %@" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Überschneidung von %@"
+          }
+        }
+      }
+    },
+    "Overlaps with: %@" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Überschneidet sich mit: %@"
+          }
+        }
+      }
+    },
+    "Part %1$lld of %2$lld" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Teil %1$lld von %2$lld"
+          }
+        }
+      }
+    },
+    "Period" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zeitraum"
+          }
+        }
+      }
+    },
+    "Permissions" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Berechtigungen"
+          }
+        }
+      }
+    },
+    "Preview" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vorschau"
+          }
+        }
+      }
+    },
+    "Previous month" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vorheriger Monat"
+          }
+        }
+      }
+    },
+    "Previous segment" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vorheriges Segment"
+          }
+        }
+      }
+    },
+    "Previous week" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vorherige Woche"
+          }
+        }
+      }
+    },
+    "Previous: %1$@ until %2$@" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vorher: %1$@ bis %2$@"
+          }
+        }
+      }
+    },
+    "Previous: %@, still running" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vorher: %@, läuft noch"
+          }
+        }
+      }
+    },
+    "Quiet hours" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ruhezeit"
+          }
+        }
+      }
+    },
+    "Quiet hours: the reminder is postponed." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ruhezeit: Die Erinnerung wird verschoben."
+          }
+        }
+      }
+    },
+    "Range" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zeitraum"
+          }
+        }
+      }
+    },
+    "Reliable background reminders" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zuverlässige Erinnerungen im Hintergrund"
+          }
+        }
+      }
+    },
+    "Remind me" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Erinnern"
+          }
+        }
+      }
+    },
+    "Remind me in 15 min" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "In 15 Min. erinnern"
+          }
+        }
+      }
+    },
+    "Reminder sent." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Erinnerung gesendet."
+          }
+        }
+      }
+    },
+    "Reminders" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Erinnerungen"
+          }
+        }
+      }
+    },
+    "Reminders are turned off." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Erinnerungen sind ausgeschaltet."
+          }
+        }
+      }
+    },
+    "Reminders when you move" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Erinnerungen, wenn du dich bewegst"
+          }
+        }
+      }
+    },
+    "Running" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rennen"
+          }
+        }
+      }
+    },
+    "Save" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sichern"
+          }
+        }
+      }
+    },
+    "Save & next" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sichern & weiter"
+          }
+        }
+      }
+    },
+    "Save it to Files, send it by e-mail or AirDrop it to your computer." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "In «Dateien» sichern, per E-Mail senden oder per AirDrop an deinen Computer schicken."
+          }
+        }
+      }
+    },
+    "Segments" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Segmente"
+          }
+        }
+      }
+    },
+    "Segments: %1$lld · %2$@ logged" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Segmente: %1$lld · %2$@ erfasst"
+          }
+        }
+      }
+    },
+    "Semicolon ( ; )" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Semikolon ( ; )"
+          }
+        }
+      }
+    },
+    "Send a test reminder" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Test-Erinnerung senden"
+          }
+        }
+      }
+    },
+    "Sensitivity" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Empfindlichkeit"
+          }
+        }
+      }
+    },
+    "Separator" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Trennzeichen"
+          }
+        }
+      }
+    },
+    "Settings" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Einstellungen"
+          }
+        }
+      }
+    },
+    "Ship" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Schiff"
+          }
+        }
+      }
+    },
+    "Show hidden suggestions again" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ausgeblendete Vorschläge wieder anzeigen"
+          }
+        }
+      }
+    },
+    "Show introduction again" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Einführung erneut anzeigen"
+          }
+        }
+      }
+    },
+    "Since %1$@ · %2$@" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Seit %1$@ · %2$@"
+          }
+        }
+      }
+    },
+    "Skip this part" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Diesen Teil überspringen"
+          }
+        }
+      }
+    },
+    "Skipped lines: %@" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Übersprungene Zeilen: %@"
+          }
+        }
+      }
+    },
+    "Start" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Start"
+          }
+        }
+      }
+    },
+    "Start a segment above or tap Add segment below." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Starte oben ein Segment oder tippe unten auf «Segment hinzufügen»."
+          }
+        }
+      }
+    },
+    "Start at %@" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Start um %@"
+          }
+        }
+      }
+    },
+    "Start logging" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Los geht's"
+          }
+        }
+      }
+    },
+    "Stationary" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stillstand"
+          }
+        }
+      }
+    },
+    "Still running" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Läuft noch"
+          }
+        }
+      }
+    },
+    "Stop" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stopp"
+          }
+        }
+      }
+    },
+    "Suggest stationary periods" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stillstand vorschlagen"
+          }
+        }
+      }
+    },
+    "Suggestions" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vorschläge"
+          }
+        }
+      }
+    },
+    "Switch to…" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wechseln zu…"
+          }
+        }
+      }
+    },
+    "Tap Add segment to log what you did on this day." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tippe auf «Segment hinzufügen», um diesen Tag zu erfassen."
+          }
+        }
+      }
+    },
+    "Tap a day to open it. The dots show the logged movement types." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tippe auf einen Tag, um ihn zu öffnen. Die Punkte zeigen die erfassten Bewegungsarten."
+          }
+        }
+      }
+    },
+    "Tap a type to start a segment now, tap Stop when it ends." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tippe auf eine Art, um jetzt ein Segment zu starten, und auf «Stopp», wenn es endet."
+          }
+        }
+      }
+    },
+    "Test" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Test"
+          }
+        }
+      }
+    },
+    "The data file was damaged. A copy was kept as %@." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Die Datendatei war beschädigt. Eine Kopie wurde als %@ aufbewahrt."
+          }
+        }
+      }
+    },
+    "The end must be after the start." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Das Ende muss nach dem Start liegen."
+          }
+        }
+      }
+    },
+    "The file is empty." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Die Datei ist leer."
+          }
+        }
+      }
+    },
+    "The file is not a text file." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Die Datei ist keine Textdatei."
+          }
+        }
+      }
+    },
+    "The file needs the columns movement_type and start_iso (or date and start_time)." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Die Datei braucht die Spalten movement_type und start_iso (oder date und start_time)."
+          }
+        }
+      }
+    },
+    "The motion sensor notices when you start moving and the app reminds you to log the segment, with day and times already filled in and the previous segment shown for checking." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Der Bewegungssensor merkt, wenn du dich in Bewegung setzt, und die App erinnert dich daran, das Segment zu erfassen – Tag und Zeiten sind schon ausgefüllt und das vorherige Segment wird zur Kontrolle angezeigt."
+          }
+        }
+      }
+    },
+    "The phone noticed a vehicle. Which one was it?" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Das iPhone hat ein Fahrzeug erkannt. Welches war es?"
+          }
+        }
+      }
+    },
+    "The reminder arrives in 5 seconds. Lock your iPhone to see it like a real one." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Die Erinnerung kommt in 5 Sekunden. Sperre dein iPhone, um sie wie eine echte zu sehen."
+          }
+        }
+      }
+    },
+    "The running segment (%1$@) will end at %2$@." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Das laufende Segment (%1$@) endet um %2$@."
+          }
+        }
+      }
+    },
+    "The start is in the future." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Der Start liegt in der Zukunft."
+          }
+        }
+      }
+    },
+    "This cannot be undone. Export a CSV first if you want to keep a copy." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Das kann nicht rückgängig gemacht werden. Exportiere vorher eine CSV-Datei, wenn du eine Kopie behalten möchtest."
+          }
+        }
+      }
+    },
+    "This device cannot detect movements (no motion coprocessor)." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dieses Gerät kann keine Bewegungen erkennen (kein Bewegungs-Koprozessor)."
+          }
+        }
+      }
+    },
+    "This movement is already covered by your segments." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Diese Bewegung ist bereits durch deine Segmente abgedeckt."
+          }
+        }
+      }
+    },
+    "This segment is longer than 12 hours. Is that right?" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dieses Segment dauert länger als 12 Stunden. Stimmt das?"
+          }
+        }
+      }
+    },
+    "Time" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zeit"
+          }
+        }
+      }
+    },
+    "Time per movement type" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zeit pro Bewegungsart"
+          }
+        }
+      }
+    },
+    "Today" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Heute"
+          }
+        }
+      }
+    },
+    "Train" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zug"
+          }
+        }
+      }
+    },
+    "Turn on reliable reminders" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zuverlässige Erinnerungen einschalten"
+          }
+        }
+      }
+    },
+    "Turned on" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eingeschaltet"
+          }
+        }
+      }
+    },
+    "Undo" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Widerrufen"
+          }
+        }
+      }
+    },
+    "Unknown" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unbekannt"
+          }
+        }
+      }
+    },
+    "Until" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bis"
+          }
+        }
+      }
+    },
+    "Vehicle" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fahrzeug"
+          }
+        }
+      }
+    },
+    "Vehicle – which one?" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fahrzeug – welches?"
+          }
+        }
+      }
+    },
+    "Version" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Version"
+          }
+        }
+      }
+    },
+    "Walking" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zu Fuss"
+          }
+        }
+      }
+    },
+    "What are you doing right now?" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Was machst du gerade?"
+          }
+        }
+      }
+    },
+    "When I start moving" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bei Beginn der Bewegung"
+          }
+        }
+      }
+    },
+    "When I stop moving" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Am Ende der Bewegung"
+          }
+        }
+      }
+    },
+    "You can still log segments and see detected movements in the app." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Du kannst weiterhin Segmente erfassen und erkannte Bewegungen in der App sehen."
+          }
+        }
+      }
+    },
+    "Your data" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Deine Daten"
+          }
+        }
+      }
+    },
+    "Your data is not accessible right now. Unlock your iPhone and try again." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Deine Daten sind gerade nicht zugänglich. Entsperre dein iPhone und versuche es erneut."
+          }
+        }
+      }
+    },
+    "Your data stays on this iPhone. No account, no server, no costs." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Deine Daten bleiben auf diesem iPhone. Kein Konto, kein Server, keine Kosten."
+          }
+        }
+      }
+    },
+    "by bike" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "mit dem Velo"
+          }
+        }
+      }
+    },
+    "has segments" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "hat Segmente"
+          }
+        }
+      }
+    },
+    "iOS keeps motion data for 7 days, so there are no suggestions for this day." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iOS speichert Bewegungsdaten 7 Tage lang, daher gibt es für diesen Tag keine Vorschläge."
+          }
+        }
+      }
+    },
+    "iOS lets a closed app check the motion sensor only now and then, so reminders can be late. With this option iOS wakes the app whenever you move a few hundred meters (requires location access \"Always\"). Your location is never stored or sent anywhere." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iOS lässt eine geschlossene App nur ab und zu den Bewegungssensor prüfen, daher können Erinnerungen verspätet kommen. Mit dieser Option weckt iOS die App, sobald du dich ein paar hundert Meter bewegst (benötigt Standortzugriff «Immer»). Dein Standort wird nie gespeichert oder irgendwohin gesendet."
+          }
+        }
+      }
+    },
+    "iOS only lets a closed app look at the motion sensor now and then. If you allow location access \"Always\", iOS wakes the app when you move a few hundred meters, so reminders arrive on time. The location itself is never stored. You can change this any time in Settings." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iOS lässt eine geschlossene App nur ab und zu auf den Bewegungssensor zugreifen. Wenn du den Standortzugriff «Immer» erlaubst, weckt iOS die App, sobald du dich ein paar hundert Meter bewegst – so kommen Erinnerungen pünktlich. Der Standort selbst wird nie gespeichert. Du kannst das jederzeit in den Einstellungen ändern."
+          }
+        }
+      }
+    },
+    "in a vehicle" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "in einem Fahrzeug"
+          }
+        }
+      }
+    },
+    "live" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "läuft"
+          }
+        }
+      }
+    },
+    "now" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "jetzt"
+          }
+        }
+      }
+    },
+    "on the move" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "unterwegs"
+          }
+        }
+      }
+    },
+    "running" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "rennend"
+          }
+        }
+      }
+    },
+    "walking" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "zu Fuss"
+          }
+        }
+      }
+    }
+  },
+  "version" : "1.0"
+}

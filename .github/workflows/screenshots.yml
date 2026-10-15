@@ -1,0 +1,42 @@
+name: Screenshots
+
+# Run manually (Actions tab → Screenshots → Run workflow). Builds the app for the iOS Simulator,
+# takes screenshots of the main screens and pushes them to the "ci-screenshots" branch.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  screenshots:
+    name: Simulator screenshots
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Build for the simulator
+        run: |
+          xcodebuild build \
+            -quiet \
+            -project SegmentationValidator.xcodeproj \
+            -scheme SegmentationValidator \
+            -configuration Debug \
+            -destination 'generic/platform=iOS Simulator' \
+            -derivedDataPath build \
+            CODE_SIGNING_ALLOWED=NO
+
+      - name: Take screenshots
+        run: bash scripts/take_screenshots.sh build/Build/Products/Debug-iphonesimulator/SegmentationValidator.app "$RUNNER_TEMP/screenshots"
+
+      - name: Push to the ci-screenshots branch
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout --orphan ci-screenshots
+          git rm -rq --cached .
+          git clean -fdxq
+          cp "$RUNNER_TEMP"/screenshots/*.png .
+          git add ./*.png
+          git commit -qm "Screenshots of ${GITHUB_SHA}"
+          git push -f origin ci-screenshots
