@@ -198,21 +198,26 @@ final class AppModel {
         }
     }
 
-    private func commit(_ updated: SegmentBook) {
-        loadSegmentsIfNeeded()
+    /// Applies and stores a change. Returns false if nothing was saved.
+    @discardableResult
+    private func commit(_ updated: SegmentBook) -> Bool {
         guard isDataLoaded else {
+            // The change was made on data that was not loaded yet: never write it over the real file.
+            loadSegmentsIfNeeded()
             alert = AppAlert(
                 title: String(localized: "Could not save"),
                 message: String(localized: "Your data is not accessible right now. Unlock your iPhone and try again.")
             )
-            return
+            return false
         }
         book = updated
         refreshDerivedData()
         do {
             try store.save(updated.segments)
+            return true
         } catch {
             alert = AppAlert(title: String(localized: "Could not save"), message: error.localizedDescription)
+            return false
         }
     }
 
@@ -239,8 +244,7 @@ final class AppModel {
             alert = AppAlert(title: String(localized: "Cannot save"), message: error.localizedDescription)
             return false
         }
-        commit(updated)
-        return true
+        return commit(updated)
     }
 
     func delete(_ segment: Segment) {
@@ -249,8 +253,7 @@ final class AppModel {
 
     func deleteSegment(id: UUID) {
         var updated = book
-        guard let removed = updated.delete(id: id) else { return }
-        commit(updated)
+        guard let removed = updated.delete(id: id), commit(updated) else { return }
         recentlyDeleted = removed
         undoExpiry?.cancel()
         undoExpiry = Task { [weak self] in
@@ -264,7 +267,7 @@ final class AppModel {
         guard let segment = recentlyDeleted else { return }
         var updated = book
         updated.insert(segment)
-        commit(updated)
+        guard commit(updated) else { return }
         recentlyDeleted = nil
         undoExpiry?.cancel()
     }
@@ -656,7 +659,9 @@ final class AppModel {
             let result = try CSVImport.segments(fromCSV: text, timeZone: .current)
             var updated = book
             let merge = updated.merge(result.segments)
-            commit(updated)
+            guard commit(updated) else {
+                return String(localized: "Could not save")
+            }
             var message = L10n.format("%1$lld added, %2$lld updated, %3$lld already known.", merge.added, merge.updated, merge.unchanged)
             if !result.skippedLines.isEmpty {
                 let lines = result.skippedLines.map { String($0) }.joined(separator: ", ")
