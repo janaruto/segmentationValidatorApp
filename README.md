@@ -10,14 +10,23 @@ Everything is exported as **CSV**.
 - 🔒 All data stays on the phone – no account, no server, no costs
 - 🧪 Core logic covered by unit tests that run in GitHub Actions
 
-<!-- SCREENSHOTS -->
+![Day view with live logging, editor pre-filled from a motion reminder, month history and CSV export](docs/screenshots/overview-en.png)
+
+<details>
+<summary>Deutsch / German</summary>
+
+![Tagesansicht, Editor mit erkannter Bewegung, Verlauf und Einstellungen](docs/screenshots/overview-de.png)
+
+</details>
 
 ## Features
 
 **Logging**
 - Movement types: `stationary`, `walking`, `bike`, `bus/tram`, `train`, `car`, `ship`, `cablecar`, `other`
 - **Live logging**: tap a type when you start ("What are you doing right now?"), tap *Stop* when
-  it ends, or *Switch to…* to change the type without a gap
+  it ends, or *Switch* to change the type without a gap
+- **Shortcuts, Siri and the Action Button**: *Start segment* (with a movement type) and *Stop segment*
+  are available as Shortcuts actions, e.g. "Start Bus/Tram in Segments" or on the iPhone's Action Button
 - **Any day**: pick a date in the week strip or the calendar and add segments with *Add segment*.
   New segments start where the day's last segment ended
 - **Validation while editing**: the editor shows the *previous* and *next* segment and whether they
@@ -35,6 +44,8 @@ Everything is exported as **CSV**.
   detected parts (walk → tram → walk) is offered part by part (*Save & next*)
 - **Detected movements** on the day screen: movements that are not logged yet, ✓ to add, ✕ to hide.
   iOS keeps this sensor history for 7 days
+- **Forgotten live segment?** If a moving segment (e.g. *Walking*) is still running but the phone has been
+  lying still for 15+ minutes, the app asks you to end it – with the time you stopped filled in
 
 **Data**
 - CSV export of everything or a date range, comma or semicolon separated, optional UTF-8 BOM for
