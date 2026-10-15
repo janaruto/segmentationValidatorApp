@@ -19,6 +19,7 @@ struct EditorRequest: Identifiable {
         case gap
         case suggestion
         case reminder(Reminder)
+        case staleSegment(StaleSegmentReminder)
     }
 
     let id = UUID()
@@ -498,16 +499,35 @@ final class AppModel {
             calendar: .current
         )
 
-        guard let reminder = result.reminder else {
+        if let reminder = result.reminder {
+            guard await notifications.canNotify() else {
+                // Nothing could be shown, so nothing counts as reminded.
+                return record(.noPermission)
+            }
+            await notifications.post(reminder, previous: book.previous(before: reminder.start))
             reminderState = result.state
             persistReminderState()
             return result.outcome
         }
-        guard await notifications.canNotify() else {
-            // Nothing could be shown, so nothing counts as reminded.
-            return record(.noPermission)
+
+        // No new movement. Maybe a live segment is still running although the phone lies still.
+        let stale = ReminderEngine.evaluateStale(
+            runs: runs,
+            book: book,
+            state: result.state,
+            settings: settings,
+            now: now,
+            calendar: .current
+        )
+        if let staleReminder = stale.reminder {
+            guard await notifications.canNotify() else {
+                return record(.noPermission)
+            }
+            await notifications.post(staleReminder)
+            reminderState = stale.state
+            return record(.sent)
         }
-        await notifications.post(reminder, previous: book.previous(before: reminder.start))
+
         reminderState = result.state
         persistReminderState()
         return result.outcome
@@ -521,7 +541,38 @@ final class AppModel {
     }
 
     /// Called when the user taps a reminder or one of its buttons.
-    func handleNotificationResponse(actionIdentifier: String, reminder: Reminder) async {
+    func handleNotificationResponse(actionIdentifier: String, notification: ReminderNotification) async {
+        switch notification {
+        case .movement(let reminder):
+            await handleMovementReminder(actionIdentifier: actionIdentifier, reminder: reminder)
+        case .staleSegment(let stale):
+            await handleStaleReminder(actionIdentifier: actionIdentifier, stale: stale)
+        }
+    }
+
+    private func opensApp(_ actionIdentifier: String) -> Bool {
+        actionIdentifier == UNNotificationDefaultActionIdentifier
+            || actionIdentifier == NotificationService.logAction
+            || actionIdentifier == NotificationService.endAction
+    }
+
+    /// "Segment still running": open the running segment with the suggested end filled in.
+    private func handleStaleReminder(actionIdentifier: String, stale: StaleSegmentReminder) async {
+        if actionIdentifier == NotificationService.snoozeAction {
+            await notifications.post(stale, delay: NotificationService.snoozeDelay)
+            return
+        }
+        guard opensApp(actionIdentifier) else { return }
+        showDay(stale.stoppedAt)
+        guard let segment = book.segment(withID: stale.segmentID), segment.isRunning else {
+            return // Already ended in the meantime.
+        }
+        var draft = SegmentDraft(editing: segment)
+        draft.end = max(stale.stoppedAt.flooredToMinute, segment.start.addingTimeInterval(60))
+        showEditor([draft], origin: .staleSegment(stale))
+    }
+
+    private func handleMovementReminder(actionIdentifier: String, reminder: Reminder) async {
         if actionIdentifier == NotificationService.snoozeAction {
             await notifications.post(
                 reminder,
@@ -530,8 +581,7 @@ final class AppModel {
             )
             return
         }
-        guard actionIdentifier == NotificationService.logAction
-            || actionIdentifier == UNNotificationDefaultActionIdentifier else { return }
+        guard opensApp(actionIdentifier) else { return }
 
         showDay(reminder.start)
         let drafts = await drafts(for: reminder)

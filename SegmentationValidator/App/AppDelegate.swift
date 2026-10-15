@@ -36,12 +36,12 @@ final class NotificationDelegate: NSObject, UNUserNotificationCenterDelegate {
         withCompletionHandler completionHandler: @escaping () -> Void
     ) {
         let action = response.actionIdentifier
-        guard let reminder = ReminderPayload.reminder(from: response.notification.request.content.userInfo) else {
+        guard let notification = ReminderPayload.notification(from: response.notification.request.content.userInfo) else {
             completionHandler()
             return
         }
         Task { @MainActor in
-            await AppModel.shared.handleNotificationResponse(actionIdentifier: action, reminder: reminder)
+            await AppModel.shared.handleNotificationResponse(actionIdentifier: action, notification: notification)
             completionHandler()
         }
     }

@@ -144,6 +144,67 @@ final class ReminderEngineTests: XCTestCase {
         XCTAssertNil(ReminderPayload.reminder(from: ["kind": "something-else"]))
     }
 
+    // MARK: - Forgotten live segments
+
+    private func runningWalk(since time: String) -> SegmentBook {
+        var book = SegmentBook()
+        book.startLive(.walking, at: TestClock.date(time))
+        return book
+    }
+
+    func testForgottenRunningSegmentIsReminded() throws {
+        let book = runningWalk(since: "2026-10-15 08:00")
+        let runs = [
+            makeRun(.walking, "2026-10-15 08:00", "2026-10-15 08:15"),
+            makeRun(.stationary, "2026-10-15 08:15", "2026-10-15 08:40", ongoing: true),
+        ]
+        let now = TestClock.date("2026-10-15 08:40")
+        let first = ReminderEngine.evaluateStale(runs: runs, book: book, state: ReminderState(), settings: DetectionSettings(), now: now, calendar: calendar)
+        let reminder = try XCTUnwrap(first.reminder)
+        XCTAssertEqual(reminder.segmentID, book.running?.id)
+        XCTAssertEqual(reminder.type, .walking)
+        XCTAssertEqual(reminder.stoppedAt, TestClock.date("2026-10-15 08:15"))
+
+        let again = ReminderEngine.evaluateStale(runs: runs, book: book, state: first.state, settings: DetectionSettings(), now: now.addingTimeInterval(3600), calendar: calendar)
+        XCTAssertNil(again.reminder, "Only once per segment")
+    }
+
+    func testShortStopsAndStationarySegmentsAreNotStale() {
+        let book = runningWalk(since: "2026-10-15 08:00")
+        let shortStop = [
+            makeRun(.walking, "2026-10-15 08:00", "2026-10-15 08:15"),
+            makeRun(.stationary, "2026-10-15 08:15", "2026-10-15 08:25", ongoing: true),
+        ]
+        XCTAssertNil(ReminderEngine.evaluateStale(runs: shortStop, book: book, state: ReminderState(), settings: DetectionSettings(), now: TestClock.date("2026-10-15 08:25"), calendar: calendar).reminder)
+
+        // Started walking while the phone was still lying on the table: nothing to remind yet.
+        let stillBefore = [makeRun(.stationary, "2026-10-15 07:00", "2026-10-15 08:40", ongoing: true)]
+        XCTAssertNil(ReminderEngine.evaluateStale(runs: stillBefore, book: book, state: ReminderState(), settings: DetectionSettings(), now: TestClock.date("2026-10-15 08:40"), calendar: calendar).reminder)
+
+        var stationaryBook = SegmentBook()
+        stationaryBook.startLive(.stationary, at: TestClock.date("2026-10-15 08:00"))
+        let still = [makeRun(.stationary, "2026-10-15 08:05", "2026-10-15 09:00", ongoing: true)]
+        XCTAssertNil(ReminderEngine.evaluateStale(runs: still, book: stationaryBook, state: ReminderState(), settings: DetectionSettings(), now: TestClock.date("2026-10-15 09:00"), calendar: calendar).reminder)
+    }
+
+    func testStalePayloadRoundTrip() {
+        let stale = StaleSegmentReminder(segmentID: UUID(), type: .busTram, stoppedAt: TestClock.date("2026-10-15 08:15"))
+        let info = ReminderPayload.userInfo(for: stale) as [AnyHashable: Any]
+        XCTAssertEqual(ReminderPayload.notification(from: info), .staleSegment(stale))
+
+        let movement = Reminder(start: TestClock.date("2026-10-15 08:10"), end: nil, activity: .walking)
+        let movementInfo = ReminderPayload.userInfo(for: movement) as [AnyHashable: Any]
+        XCTAssertEqual(ReminderPayload.notification(from: movementInfo), .movement(movement))
+    }
+
+    func testReminderStateDecodesOlderData() throws {
+        let json = Data(#"{"startHandled":[1000],"lastOutcome":"sent"}"#.utf8)
+        let state = try JSONDecoder().decode(ReminderState.self, from: json)
+        XCTAssertEqual(state.startHandled, [Date(timeIntervalSinceReferenceDate: 1000)])
+        XCTAssertEqual(state.staleHandled, [])
+        XCTAssertEqual(state.lastOutcome, .sent)
+    }
+
     func testSettingsDecodeLeniently() throws {
         let json = Data(#"{"sensitivity":"high","timing":"nonsense","quietHoursStart":60}"#.utf8)
         let settings = try JSONDecoder().decode(DetectionSettings.self, from: json)

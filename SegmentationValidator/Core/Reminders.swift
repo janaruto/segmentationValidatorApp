@@ -98,13 +98,43 @@ struct ReminderState: Codable, Equatable, Sendable {
     var startHandled: [Date] = []
     /// Start times of movements an "ended" reminder was sent for (or that needed none).
     var endHandled: [Date] = []
+    /// Running segments a "still running?" reminder was sent for.
+    var staleHandled: [UUID] = []
     var lastCheckAt: Date?
     var lastOutcome: ReminderOutcome?
+
+    init() {}
 
     mutating func prune(before cutoff: Date) {
         startHandled.removeAll { $0 < cutoff }
         endHandled.removeAll { $0 < cutoff }
+        if staleHandled.count > 50 {
+            staleHandled.removeFirst(staleHandled.count - 50)
+        }
     }
+
+    private enum CodingKeys: String, CodingKey {
+        case lastReminderAt, startHandled, endHandled, staleHandled, lastCheckAt, lastOutcome
+    }
+
+    // Lenient decoding, so that state written by another app version never gets lost.
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        lastReminderAt = try? container.decodeIfPresent(Date.self, forKey: .lastReminderAt)
+        startHandled = (try? container.decodeIfPresent([Date].self, forKey: .startHandled)) ?? []
+        endHandled = (try? container.decodeIfPresent([Date].self, forKey: .endHandled)) ?? []
+        staleHandled = (try? container.decodeIfPresent([UUID].self, forKey: .staleHandled)) ?? []
+        lastCheckAt = try? container.decodeIfPresent(Date.self, forKey: .lastCheckAt)
+        lastOutcome = try? container.decodeIfPresent(ReminderOutcome.self, forKey: .lastOutcome)
+    }
+}
+
+/// A moving segment is still running although the phone has been lying still for a while.
+struct StaleSegmentReminder: Equatable, Sendable {
+    var segmentID: UUID
+    var type: MovementType
+    /// When the phone stopped moving: the suggested end of the segment.
+    var stoppedAt: Date
 }
 
 enum ReminderOutcome: String, Codable, Sendable {
@@ -200,6 +230,46 @@ enum ReminderEngine {
         return finish(.sent, reminder)
     }
 
+    /// How long the phone has to be still before a running moving segment counts as forgotten.
+    static func staleThreshold(for parameters: DetectionParameters) -> TimeInterval {
+        max(15 * 60, 3 * parameters.maximumPause)
+    }
+
+    /// Checks whether a running moving segment (live logging) was probably forgotten:
+    /// the motion sensor says the phone has been still since some time after the segment started.
+    static func evaluateStale(
+        runs: [DetectedRun],
+        book: SegmentBook,
+        state previous: ReminderState,
+        settings: DetectionSettings,
+        now: Date,
+        calendar: Calendar
+    ) -> (reminder: StaleSegmentReminder?, state: ReminderState) {
+        var state = previous
+        guard settings.remindersEnabled,
+              let running = book.running,
+              running.type.isMoving,
+              !state.staleHandled.contains(running.id),
+              let last = runs.last,
+              last.isOngoing,
+              last.activity == .stationary,
+              last.start > running.start,
+              now.timeIntervalSince(last.start) >= staleThreshold(for: settings.sensitivity.parameters)
+        else {
+            return (nil, state)
+        }
+        if isQuietTime(now, settings: settings, calendar: calendar) {
+            return (nil, state)
+        }
+        if let lastReminder = state.lastReminderAt,
+           now.timeIntervalSince(lastReminder) < settings.sensitivity.parameters.reminderCooldown {
+            return (nil, state)
+        }
+        state.staleHandled.append(running.id)
+        state.lastReminderAt = now
+        return (StaleSegmentReminder(segmentID: running.id, type: running.type, stoppedAt: last.start), state)
+    }
+
     /// True when logged moving segments cover at least half of the movement.
     static func isLogged(_ episode: MovementEpisode, in book: SegmentBook, now: Date) -> Bool {
         let interval = episode.interval
@@ -233,13 +303,22 @@ enum ReminderEngine {
     }
 }
 
+/// The two kinds of reminder notifications.
+enum ReminderNotification: Equatable, Sendable {
+    /// "Movement detected": log the new movement.
+    case movement(Reminder)
+    /// "Segment still running": end a forgotten live segment.
+    case staleSegment(StaleSegmentReminder)
+}
+
 /// Converts reminders to and from a notification's `userInfo`.
 enum ReminderPayload {
-    static let kind = "movement-reminder"
+    static let movementKind = "movement-reminder"
+    static let staleKind = "stale-segment"
 
     static func userInfo(for reminder: Reminder) -> [String: Any] {
         var info: [String: Any] = [
-            "kind": kind,
+            "kind": movementKind,
             "start": reminder.start.timeIntervalSince1970,
             "activity": reminder.activity.rawValue,
             "additional": reminder.additionalUnlogged,
@@ -250,8 +329,31 @@ enum ReminderPayload {
         return info
     }
 
+    static func userInfo(for stale: StaleSegmentReminder) -> [String: Any] {
+        [
+            "kind": staleKind,
+            "segment": stale.segmentID.uuidString,
+            "type": stale.type.rawValue,
+            "stoppedAt": stale.stoppedAt.timeIntervalSince1970,
+        ]
+    }
+
+    static func notification(from userInfo: [AnyHashable: Any]) -> ReminderNotification? {
+        switch userInfo["kind"] as? String {
+        case movementKind:
+            return reminder(from: userInfo).map { .movement($0) }
+        case staleKind:
+            guard let id = (userInfo["segment"] as? String).flatMap(UUID.init(uuidString:)),
+                  let type = (userInfo["type"] as? String).flatMap(MovementType.init(rawValue:)),
+                  let stoppedAt = number(userInfo["stoppedAt"]) else { return nil }
+            return .staleSegment(StaleSegmentReminder(segmentID: id, type: type, stoppedAt: Date(timeIntervalSince1970: stoppedAt)))
+        default:
+            return nil
+        }
+    }
+
     static func reminder(from userInfo: [AnyHashable: Any]) -> Reminder? {
-        guard userInfo["kind"] as? String == kind, let start = number(userInfo["start"]) else { return nil }
+        guard userInfo["kind"] as? String == movementKind, let start = number(userInfo["start"]) else { return nil }
         let end = number(userInfo["end"]).map { Date(timeIntervalSince1970: $0) }
         let activity = (userInfo["activity"] as? String).flatMap(DetectedActivity.init(rawValue:)) ?? .unknown
         let additional = number(userInfo["additional"]).map { Int($0) } ?? 0

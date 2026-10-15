@@ -1,6 +1,16 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "%1$@ is still running, but you seem to have stopped at %2$@. Tap to end it." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ läuft noch, aber du scheinst um %2$@ angehalten zu haben. Tippe, um es zu beenden."
+          }
+        }
+      }
+    },
     "%1$@ – %2$@, probably %3$@. Tap to log the segment." : {
       "localizations" : {
         "de" : {
@@ -611,12 +621,32 @@
         }
       }
     },
+    "End segment" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Segment beenden"
+          }
+        }
+      }
+    },
     "Ends on the next day" : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Endet am nächsten Tag"
+          }
+        }
+      }
+    },
+    "Ends the running segment now." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Beendet das laufende Segment jetzt."
           }
         }
       }
@@ -1017,6 +1047,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Während der Ruhezeit gibt es keine Erinnerungen. Bewegungen werden trotzdem erkannt und in der App angezeigt."
+          }
+        }
+      }
+    },
+    "No segment is running." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Es läuft kein Segment."
           }
         }
       }
@@ -1441,6 +1481,16 @@
         }
       }
     },
+    "Segment still running" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Segment läuft noch"
+          }
+        }
+      }
+    },
     "Segments" : {
       "localizations" : {
         "de" : {
@@ -1611,6 +1661,37 @@
         }
       }
     },
+    "Start segment" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Segment starten"
+          }
+        }
+      }
+    },
+    "Started: %@" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gestartet: %@"
+          }
+        }
+      }
+    },
+    "Starts a running segment now and ends the one that was running." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Startet jetzt ein laufendes Segment und beendet das bisher laufende."
+          }
+        }
+      }
+    },
     "Stationary" : {
       "localizations" : {
         "de" : {
@@ -1631,12 +1712,43 @@
         }
       }
     },
+    "Still running?" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Läuft es noch?"
+          }
+        }
+      }
+    },
     "Stop" : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Stopp"
+          }
+        }
+      }
+    },
+    "Stop segment" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Segment stoppen"
+          }
+        }
+      }
+    },
+    "Stopped: %@" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gestoppt: %@"
           }
         }
       }
@@ -1771,6 +1883,16 @@
         }
       }
     },
+    "The phone has not moved since %@. The end is filled in, adjust it if needed." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Das iPhone hat sich seit %@ nicht mehr bewegt. Das Ende ist ausgefüllt, passe es bei Bedarf an."
+          }
+        }
+      }
+    },
     "The phone noticed a vehicle. Which one was it?" : {
       "localizations" : {
         "de" : {
@@ -1797,6 +1919,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Das laufende Segment (%1$@) endet um %2$@."
+          }
+        }
+      }
+    },
+    "The segment could not be saved. Open the app and try again." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Das Segment konnte nicht gesichert werden. Öffne die App und versuche es erneut."
           }
         }
       }

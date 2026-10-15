@@ -236,6 +236,11 @@ struct SegmentEditorForm: View {
                 title: String(localized: "Detected by the motion sensor"),
                 detail: detectionDetail(activity: original.detectedActivity ?? .unknown)
             ))
+        case .staleSegment(let stale):
+            return AnyView(DetectionBanner(
+                title: String(localized: "Still running?"),
+                detail: L10n.format("The phone has not moved since %@. The end is filled in, adjust it if needed.", Formatting.time(stale.stoppedAt))
+            ))
         case .manual, .edit, .gap:
             return nil
         }

@@ -27,6 +27,9 @@ PATTERNS = [
     re.compile(r'\?\s*' + LITERAL + r'\s*:\s*' + LITERAL),
     # LocalizedStringKey parameters of our own views
     re.compile(r'\b(?:title|text):\s*' + LITERAL),
+    # App Intents (Shortcuts, Siri)
+    re.compile(r'(?:LocalizedStringResource|TypeDisplayRepresentation)\s*=\s*' + LITERAL),
+    re.compile(r'\b(?:IntentDescription|dialog:|shortTitle:)\(?\s*' + LITERAL),
 ]
 # Parameters named title/text that take plain strings, not localization keys.
 NOT_KEYS_IN = {"NotificationService.swift"}

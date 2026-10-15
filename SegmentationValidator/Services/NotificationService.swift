@@ -4,7 +4,9 @@ import UserNotifications
 /// Local notifications only: they are scheduled on the phone itself, no push server is involved.
 final class NotificationService {
     static let reminderCategory = "MOVEMENT_REMINDER"
+    static let staleCategory = "STALE_SEGMENT"
     static let logAction = "LOG_SEGMENT"
+    static let endAction = "END_SEGMENT"
     static let snoozeAction = "SNOOZE"
     static let snoozeDelay: TimeInterval = 15 * 60
 
@@ -21,13 +23,24 @@ final class NotificationService {
             title: String(localized: "Remind me in 15 min"),
             options: []
         )
-        let category = UNNotificationCategory(
+        let end = UNNotificationAction(
+            identifier: Self.endAction,
+            title: String(localized: "End segment"),
+            options: [.foreground]
+        )
+        let movement = UNNotificationCategory(
             identifier: Self.reminderCategory,
             actions: [log, snooze],
             intentIdentifiers: [],
             options: []
         )
-        center.setNotificationCategories([category])
+        let stale = UNNotificationCategory(
+            identifier: Self.staleCategory,
+            actions: [end, snooze],
+            intentIdentifiers: [],
+            options: []
+        )
+        center.setNotificationCategories([movement, stale])
     }
 
     func requestAuthorization() async -> Bool {
@@ -61,6 +74,25 @@ final class NotificationService {
         // The same movement keeps the same identifier, so an "ended" reminder replaces the "started" one.
         let id = identifier ?? "movement-\(Int(reminder.start.timeIntervalSince1970))"
         let request = UNNotificationRequest(identifier: id, content: content, trigger: trigger)
+        try? await center.add(request)
+    }
+
+    /// Asks to end a live segment that was probably forgotten.
+    func post(_ stale: StaleSegmentReminder, delay: TimeInterval? = nil) async {
+        let content = UNMutableNotificationContent()
+        content.title = String(localized: "Segment still running")
+        content.body = L10n.format(
+            "%1$@ is still running, but you seem to have stopped at %2$@. Tap to end it.",
+            stale.type.displayName,
+            Formatting.time(stale.stoppedAt)
+        )
+        content.sound = .default
+        content.categoryIdentifier = Self.staleCategory
+        content.threadIdentifier = "movement-reminders"
+        content.userInfo = ReminderPayload.userInfo(for: stale)
+
+        let trigger = delay.map { UNTimeIntervalNotificationTrigger(timeInterval: max(1, $0), repeats: false) }
+        let request = UNNotificationRequest(identifier: "stale-\(stale.segmentID.uuidString)", content: content, trigger: trigger)
         try? await center.add(request)
     }
 

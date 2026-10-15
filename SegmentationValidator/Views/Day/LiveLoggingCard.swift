@@ -5,11 +5,14 @@ struct LiveLoggingCard: View {
     @Environment(AppModel.self) private var model
 
     var body: some View {
-        if let running = model.book.running {
-            RunningSegmentView(segment: running)
-        } else {
-            StartSegmentView()
+        Group {
+            if let running = model.book.running {
+                RunningSegmentView(segment: running)
+            } else {
+                StartSegmentView()
+            }
         }
+        .sensoryFeedback(.impact(weight: .medium), trigger: model.book.running?.id)
     }
 }
 
