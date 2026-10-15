@@ -12,8 +12,18 @@ struct OnboardingView: View {
                 remindersPage.tag(1)
                 backgroundPage.tag(2)
             }
-            .tabViewStyle(.page(indexDisplayMode: .always))
-            .indexViewStyle(.page(backgroundDisplayMode: .always))
+            .tabViewStyle(.page(indexDisplayMode: .never))
+
+            HStack(spacing: 8) {
+                ForEach(0..<3, id: \.self) { index in
+                    Capsule()
+                        .fill(index == page ? Color.brand : Color.secondary.opacity(0.3))
+                        .frame(width: index == page ? 22 : 8, height: 8)
+                }
+            }
+            .animation(.snappy, value: page)
+            .padding(.top, 8)
+            .accessibilityHidden(true)
 
             Button {
                 if page < 2 {
@@ -131,7 +141,7 @@ private struct OnboardingPage<Accessory: View>: View {
             VStack(spacing: 20) {
                 Image(systemName: systemImage)
                     .font(.system(size: 64, weight: .semibold))
-                    .foregroundStyle(Color.accentColor.gradient)
+                    .foregroundStyle(Color.brand.gradient)
                     .padding(.top, 48)
                 Text(title)
                     .font(.title.bold())

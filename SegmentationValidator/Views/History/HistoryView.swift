@@ -153,7 +153,7 @@ private struct MonthDayCell: View {
             Text(day.formatted(.dateTime.day()))
                 .font(.callout.weight(isToday ? .bold : .regular))
                 .monospacedDigit()
-                .foregroundStyle(isToday ? Color.accentColor : Color.primary)
+                .foregroundStyle(isToday ? Color.brand : Color.primary)
             HStack(spacing: 2) {
                 ForEach(types.prefix(4), id: \.self) { type in
                     Circle()
@@ -166,7 +166,7 @@ private struct MonthDayCell: View {
         .frame(maxWidth: .infinity, minHeight: 40)
         .background(
             RoundedRectangle(cornerRadius: 8, style: .continuous)
-                .fill(types.isEmpty ? Color.clear : Color.accentColor.opacity(0.08))
+                .fill(types.isEmpty ? Color.clear : Color.brand.opacity(0.08))
         )
         .contentShape(Rectangle())
         .accessibilityElement(children: .ignore)

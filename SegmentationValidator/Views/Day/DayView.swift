@@ -100,7 +100,7 @@ struct DayView: View {
             } label: {
                 Label("Add after", systemImage: "text.badge.plus")
             }
-            .tint(.accentColor)
+            .tint(Color.brand)
         }
         .contextMenu {
             Button {
@@ -152,14 +152,14 @@ struct DaySummaryHeader: View {
     var body: some View {
         HStack {
             Text("Segments")
+            if !timeline.segments.isEmpty {
+                Text(verbatim: "(\(timeline.segments.count))")
+            }
             Spacer()
             if !timeline.segments.isEmpty {
-                Text(L10n.format(
-                    "%1$lld · %2$@ logged",
-                    timeline.segments.count,
-                    DurationText.short(timeline.loggedDuration)
-                ))
-                .monospacedDigit()
+                Text(L10n.format("%@ logged", DurationText.short(timeline.loggedDuration)))
+                    .textCase(nil)
+                    .monospacedDigit()
             }
         }
     }

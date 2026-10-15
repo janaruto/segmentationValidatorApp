@@ -65,6 +65,19 @@ final class DraftFactoryTests: XCTestCase {
         XCTAssertNil(draft.type)
     }
 
+    func testNewDraftIgnoresANightSegmentEndingTheNextDay() {
+        let book = SegmentBook(segments: [
+            makeSegment(.cablecar, "2026-10-14 19:25", "2026-10-14 19:35"),
+            makeSegment(.stationary, "2026-10-14 21:00", "2026-10-15 07:00"),
+        ])
+        let draft = DraftFactory.newDraft(on: TestClock.date("2026-10-14 12:00"), book: book, now: TestClock.date("2026-10-15 12:00"), calendar: calendar)
+        XCTAssertEqual(draft.start, TestClock.date("2026-10-14 19:35"))
+        XCTAssertEqual(draft.end, TestClock.date("2026-10-14 20:05"))
+
+        let nextDay = DraftFactory.newDraft(on: TestClock.date("2026-10-15 00:00"), book: book, now: TestClock.date("2026-10-15 12:00:30"), calendar: calendar)
+        XCTAssertEqual(nextDay.start, TestClock.date("2026-10-15 07:00"), "Continues after the night")
+    }
+
     func testNewDraftForAnEmptyPastDayStartsAtEight() {
         let draft = DraftFactory.newDraft(on: TestClock.date("2026-10-13 00:00"), book: SegmentBook(), now: TestClock.date("2026-10-15 12:00"), calendar: calendar)
         XCTAssertEqual(draft.start, TestClock.date("2026-10-13 08:00"))
@@ -150,6 +163,23 @@ final class DateMathTests: XCTestCase {
         XCTAssertEqual(DurationText.short(45 * 60), "45 min")
         XCTAssertEqual(DurationText.short(65 * 60), "1 h 5 min")
         XCTAssertEqual(DurationText.short(120 * 60), "2 h")
+    }
+
+    func testDaylightSavingDays() {
+        // Clocks go back on 2026-10-25 and forward on 2026-03-29 in Zurich.
+        let longDay = calendar.dayInterval(containing: TestClock.date("2026-10-25 12:00"))
+        XCTAssertEqual(longDay.duration, 25 * 3600)
+        let shortDay = calendar.dayInterval(containing: TestClock.date("2026-03-29 12:00"))
+        XCTAssertEqual(shortDay.duration, 23 * 3600)
+
+        // 01:30 to 03:30 on the short day lasts one hour (02:00–03:00 does not exist).
+        let start = TestClock.date("2026-03-29 01:30")
+        let end = calendar.end(forStart: start, endTimeOfDay: TestClock.date("2026-01-01 03:30"))
+        XCTAssertEqual(end.timeIntervalSince(start), 3600)
+
+        let wholeDay = Segment(start: longDay.start, end: longDay.end, type: .stationary)
+        let timeline = DayTimeline(day: longDay.start, book: SegmentBook(segments: [wholeDay]), calendar: calendar, now: TestClock.date("2026-10-30 12:00"))
+        XCTAssertEqual(timeline.loggedDuration, 25 * 3600)
     }
 
     func testIntervalSubtraction() {

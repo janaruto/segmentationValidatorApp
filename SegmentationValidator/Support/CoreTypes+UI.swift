@@ -93,9 +93,9 @@ extension Sensitivity {
 extension ReminderTiming {
     var title: String {
         switch self {
-        case .start: return String(localized: "When I start moving")
-        case .end: return String(localized: "When I stop moving")
-        case .both: return String(localized: "Both")
+        case .start: return String(localized: "At the start")
+        case .end: return String(localized: "At the end")
+        case .both: return String(localized: "Start and end")
         }
     }
 }

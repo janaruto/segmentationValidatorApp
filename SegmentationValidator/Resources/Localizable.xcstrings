@@ -31,22 +31,22 @@
         }
       }
     },
-    "%1$lld · %2$@ logged" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%1$lld · %2$@ erfasst"
-          }
-        }
-      }
-    },
     "%@ (ongoing)" : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "%@ (läuft)"
+          }
+        }
+      }
+    },
+    "%@ logged" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ erfasst"
           }
         }
       }
@@ -241,6 +241,26 @@
         }
       }
     },
+    "At the end" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Am Ende"
+          }
+        }
+      }
+    },
+    "At the start" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Beim Start"
+          }
+        }
+      }
+    },
     "Background" : {
       "localizations" : {
         "de" : {
@@ -267,16 +287,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Velo"
-          }
-        }
-      }
-    },
-    "Both" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Beides"
           }
         }
       }
@@ -1641,6 +1651,16 @@
         }
       }
     },
+    "Start and end" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Start und Ende"
+          }
+        }
+      }
+    },
     "Start at %@" : {
       "localizations" : {
         "de" : {
@@ -1712,6 +1732,16 @@
         }
       }
     },
+    "Still running – it will end at %@" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Läuft noch – endet um %@"
+          }
+        }
+      }
+    },
     "Still running?" : {
       "localizations" : {
         "de" : {
@@ -1773,12 +1803,12 @@
         }
       }
     },
-    "Switch to…" : {
+    "Switch" : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Wechseln zu…"
+            "value" : "Wechseln"
           }
         }
       }
@@ -2119,26 +2149,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Was machst du gerade?"
-          }
-        }
-      }
-    },
-    "When I start moving" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Bei Beginn der Bewegung"
-          }
-        }
-      }
-    },
-    "When I stop moving" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Am Ende der Bewegung"
           }
         }
       }

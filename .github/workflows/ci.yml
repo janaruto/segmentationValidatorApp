@@ -52,6 +52,7 @@ jobs:
           ls -d "$APP"/*.lproj
           plutil -p "$APP/de.lproj/Localizable.strings" | head -n 5
           plutil -p "$APP/de.lproj/InfoPlist.strings"
+          xcrun --sdk iphoneos assetutil --info "$APP/Assets.car" | python3 -c 'import json, sys; [print(a.get("AssetType"), a.get("Name"), a.get("Appearance", "")) for a in json.load(sys.stdin)[1:]]'
 
       - name: Check strings are translated
         run: python3 scripts/check_strings.py

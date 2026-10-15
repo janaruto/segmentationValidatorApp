@@ -28,16 +28,21 @@ struct RootView: View {
                 }
                 .tag(AppTab.settings)
         }
+        .tint(Color.brand)
         .sheet(item: $model.sheet) { sheet in
-            switch sheet {
-            case .editor(let request):
-                SegmentEditorSheet(request: request)
-            case .datePicker:
-                DatePickerSheet()
+            Group {
+                switch sheet {
+                case .editor(let request):
+                    SegmentEditorSheet(request: request)
+                case .datePicker:
+                    DatePickerSheet()
+                }
             }
+            .tint(Color.brand)
         }
         .fullScreenCover(isPresented: onboardingBinding) {
             OnboardingView()
+                .tint(Color.brand)
         }
         .alert(model.alert?.title ?? "", isPresented: alertBinding, presenting: model.alert) { _ in
             Button("OK", role: .cancel) {}

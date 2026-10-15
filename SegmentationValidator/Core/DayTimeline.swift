@@ -90,9 +90,11 @@ enum DraftFactory {
             return SegmentDraft(start: nowMinute, end: nil)
         }
 
+        // Latest end inside this day; a night segment that ends tomorrow does not count.
+        let lastEnd = daySegments.compactMap { $0.end }.filter { $0 > interval.start && $0 < interval.end }.max()
         let start: Date
-        if let lastEnd = daySegments.compactMap({ $0.end }).max(), lastEnd < interval.end {
-            start = max(lastEnd, interval.start)
+        if let lastEnd {
+            start = lastEnd
         } else if isToday {
             start = max(interval.start, nowMinute.addingTimeInterval(-30 * 60))
         } else {

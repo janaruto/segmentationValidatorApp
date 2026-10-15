@@ -61,16 +61,25 @@ private struct RunningSegmentView: View {
                         }
                     }
                 } label: {
-                    Label("Switch to…", systemImage: "arrow.triangle.2.circlepath")
-                        .frame(maxWidth: .infinity)
+                    HStack(spacing: 6) {
+                        Image(systemName: "arrow.triangle.2.circlepath")
+                        Text("Switch")
+                    }
+                    .lineLimit(1)
+                    .frame(maxWidth: .infinity)
                 }
                 .buttonStyle(.bordered)
 
                 Button {
                     model.stopLive()
                 } label: {
-                    Label("Stop", systemImage: "stop.fill")
-                        .frame(maxWidth: .infinity)
+                    HStack(spacing: 6) {
+                        Image(systemName: "stop.fill")
+                        Text("Stop")
+                    }
+                    .lineLimit(1)
+                    .foregroundStyle(.white)
+                    .frame(maxWidth: .infinity)
                 }
                 .buttonStyle(.borderedProminent)
                 .tint(.red)

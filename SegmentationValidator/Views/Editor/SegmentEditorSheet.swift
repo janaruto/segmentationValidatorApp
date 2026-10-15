@@ -255,10 +255,13 @@ struct SegmentEditorForm: View {
     private var continuitySection: some View {
         Section {
             if let previous {
+                let continuity = Continuity.between(end: previous.end, start: draft.start)
                 NeighborRow(
                     title: String(localized: "Previous segment"),
                     segment: previous,
-                    continuity: Continuity.between(end: previous.end, start: draft.start),
+                    status: continuity == .running
+                        ? .info(L10n.format("Still running – it will end at %@", Formatting.time(draft.start)))
+                        : NeighborStatus(continuity),
                     fixTitle: previous.end.map { L10n.format("Start at %@", Formatting.time($0)) },
                     fix: {
                         if let previousEnd = previous.end {
@@ -275,7 +278,7 @@ struct SegmentEditorForm: View {
                 NeighborRow(
                     title: String(localized: "Next segment"),
                     segment: next,
-                    continuity: Continuity.between(end: draft.end, start: next.start),
+                    status: NeighborStatus(Continuity.between(end: draft.end, start: next.start)),
                     fixTitle: L10n.format("End at %@", Formatting.time(next.start)),
                     fix: {
                         isRunning = false
@@ -387,11 +390,37 @@ struct SegmentEditorForm: View {
     }
 }
 
+/// How a neighbouring segment connects to the edited one.
+private struct NeighborStatus {
+    var message: String
+    var symbol: String
+    var color: Color
+    var isProblem: Bool
+
+    init(_ continuity: Continuity) {
+        message = continuity.message
+        isProblem = continuity.isProblem
+        symbol = continuity.isProblem ? "exclamationmark.triangle.fill" : "checkmark.circle.fill"
+        color = continuity.isProblem ? .orange : .green
+    }
+
+    private init(message: String, symbol: String, color: Color) {
+        self.message = message
+        self.symbol = symbol
+        self.color = color
+        isProblem = false
+    }
+
+    static func info(_ message: String) -> NeighborStatus {
+        NeighborStatus(message: message, symbol: "info.circle.fill", color: .brand)
+    }
+}
+
 /// Context card: the neighbouring segment and how it connects to the edited one.
 private struct NeighborRow: View {
     let title: String
     let segment: Segment
-    let continuity: Continuity
+    let status: NeighborStatus
     let fixTitle: String?
     let fix: () -> Void
 
@@ -412,11 +441,14 @@ private struct NeighborRow: View {
                 Spacer()
             }
             HStack {
-                Label(continuity.message, systemImage: continuity.isProblem ? "exclamationmark.triangle.fill" : "checkmark.circle.fill")
-                    .font(.caption)
-                    .foregroundStyle(continuity.isProblem ? Color.orange : Color.green)
+                HStack(spacing: 6) {
+                    Image(systemName: status.symbol)
+                    Text(status.message)
+                }
+                .font(.caption)
+                .foregroundStyle(status.color)
                 Spacer()
-                if continuity.isProblem, let fixTitle {
+                if status.isProblem, let fixTitle {
                     Button(fixTitle, action: fix)
                         .font(.caption.weight(.semibold))
                         .buttonStyle(.bordered)
@@ -443,7 +475,7 @@ private struct DetectionBanner: View {
             }
         } icon: {
             Image(systemName: "dot.radiowaves.left.and.right")
-                .foregroundStyle(Color.accentColor)
+                .foregroundStyle(Color.brand)
         }
     }
 }
