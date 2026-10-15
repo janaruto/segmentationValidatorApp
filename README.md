@@ -78,25 +78,38 @@ the correct start time. *Settings → Test* sends a test reminder and lets you r
 You do **not** need the paid Apple Developer Program. With a free Apple ID the app is signed for
 7 days; after that, simply install it again (your data is kept as long as you don't delete the app).
 
-### With a Mac (recommended)
+### Option A – without Xcode (works on any Mac or Windows PC)
 
-1. Install **Xcode** (free, Mac App Store).
-2. `git clone https://github.com/janaruto/segmentationValidatorApp.git` and open
+Every push to `main` builds the app in GitHub Actions and publishes it as
+**[SegmentationValidator.ipa](https://github.com/janaruto/segmentationValidatorApp/releases/latest/download/SegmentationValidator.ipa)**
+(unsigned). [Sideloadly](https://sideloadly.io) signs it with your free Apple ID and installs it:
+
+1. Install Sideloadly (macOS or Windows) and download `SegmentationValidator.ipa` from the link above.
+2. Connect the iPhone with a cable, unlock it and tap *Trust This Computer*.
+3. Drag the IPA into Sideloadly, enter your Apple ID and click *Start*. (Sideloadly only uses the
+   Apple ID to create the free signing certificate. You can also use a separate Apple ID.)
+4. On the iPhone: *Settings → Privacy & Security → Developer Mode* → on (restart), then
+   *Settings → General → VPN & Device Management* → trust your Apple ID.
+5. After 7 days, repeat step 3 with the same Apple ID. Your data is kept.
+
+[AltStore](https://altstore.io) works the same way and can refresh the app automatically over Wi-Fi.
+
+### Option B – with Xcode
+
+Xcode needs a recent macOS (the current App Store version requires macOS 26.6). On an older macOS,
+update macOS first, or download an older Xcode from
+[developer.apple.com/download/all](https://developer.apple.com/download/all/) (free Apple ID).
+The project needs **Xcode 16 or newer** (Xcode 16 runs on macOS 14.5+, Xcode 26 on macOS 15.6+).
+Note that an older Xcode may not be able to install apps on an iPhone with a newer iOS – then use Option A.
+
+1. `git clone https://github.com/janaruto/segmentationValidatorApp.git` and open
    `SegmentationValidator.xcodeproj`.
-3. Xcode → *Settings → Accounts*: add your Apple ID.
-4. Select the *SegmentationValidator* target → *Signing & Capabilities* → *Team*: your Apple ID
+2. Xcode → *Settings → Accounts*: add your Apple ID.
+3. Select the *SegmentationValidator* target → *Signing & Capabilities* → *Team*: your Apple ID
    ("Personal Team"). If Xcode says the bundle identifier is taken, change
    `com.janaruto.SegmentationValidator` to something unique (e.g. `ch.yourname.segments`).
-5. Connect the iPhone with a cable, select it as run destination and press ▶︎.
-6. On the iPhone: *Settings → Privacy & Security → Developer Mode* → on (restart), then
-   *Settings → General → VPN & Device Management* → trust your Apple ID.
-
-### Without a Mac
-
-Every push to `main` builds an **unsigned IPA** in GitHub Actions
-(*Actions → CI → latest run → Artifacts → SegmentationValidator-unsigned-ipa*). Sideloading tools
-such as [Sideloadly](https://sideloadly.io) or [AltStore](https://altstore.io) (Windows or Mac) sign
-it with your free Apple ID and install it. Repeat every 7 days.
+4. Connect the iPhone with a cable, select it as run destination and press ▶︎.
+5. On the iPhone: enable *Developer Mode* and trust your Apple ID as in Option A, step 4.
 
 ## CSV format
 

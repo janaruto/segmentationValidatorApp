@@ -23,6 +23,8 @@ jobs:
   ios-build:
     name: Build iPhone app
     runs-on: macos-15
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v5
 
@@ -87,3 +89,17 @@ jobs:
           name: SegmentationValidator-unsigned-ipa
           path: SegmentationValidator-unsigned.ipa
           retention-days: 30
+
+      # A fixed download link for installing without Xcode (e.g. with Sideloadly):
+      # https://github.com/<owner>/<repo>/releases/latest/download/SegmentationValidator.ipa
+      - name: Publish IPA as the latest release
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          cp SegmentationValidator-unsigned.ipa SegmentationValidator.ipa
+          gh release delete latest-build --yes --cleanup-tag || true
+          gh release create latest-build SegmentationValidator.ipa \
+            --target "$GITHUB_SHA" \
+            --title "Latest build" \
+            --notes "Unsigned iPhone app built from ${GITHUB_SHA::7}. Install it with Sideloadly or AltStore and your Apple ID (see README)."
