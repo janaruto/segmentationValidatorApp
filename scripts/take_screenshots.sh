@@ -57,15 +57,20 @@ for lang in en de; do
     xcrun simctl privacy "$DEVICE" grant location-always "$BUNDLE_ID" || true
     shot "$lang-01-onboarding" "${common[@]}"
 
+    # Still without segments: only today's location points.
+    points=("${common[@]}" -hasCompletedOnboarding YES -debugSeedLocationPoints YES)
+    shot "$lang-02-location-points" "${points[@]}"
+    shot "$lang-03-moving-answer" "${points[@]}" -debugMovingAnswer YES
+
     ready=("${common[@]}" -hasCompletedOnboarding YES -debugSeedDemoData YES -debugFakeDetections YES)
-    shot "$lang-02-today" "${ready[@]}"
-    shot "$lang-03-yesterday" "${ready[@]}" -debugShowYesterday YES
-    shot "$lang-04-editor-from-reminder" "${ready[@]}" -debugOpenEditor reminder
-    shot "$lang-05-new-segment" "${ready[@]}" -debugShowYesterday YES -debugOpenEditor new
-    shot "$lang-06-history" "${ready[@]}" -debugInitialTab history
-    shot "$lang-07-export" "${ready[@]}" -debugInitialTab export
-    shot "$lang-08-location-question" "${ready[@]}" -debugLocationPrompt YES
-    shot "$lang-09-map" "${ready[@]}" -debugOpenMap YES
+    shot "$lang-04-today" "${ready[@]}"
+    shot "$lang-05-yesterday" "${ready[@]}" -debugShowYesterday YES
+    shot "$lang-06-editor-from-reminder" "${ready[@]}" -debugOpenEditor reminder
+    shot "$lang-07-new-segment" "${ready[@]}" -debugShowYesterday YES -debugOpenEditor new
+    shot "$lang-08-history" "${ready[@]}" -debugInitialTab history
+    shot "$lang-09-export" "${ready[@]}" -debugInitialTab export
+    shot "$lang-10-location-question" "${ready[@]}" -debugLocationPrompt YES
+    shot "$lang-11-map" "${ready[@]}" -debugOpenMap YES
     # Last, because it turns on location tracking for good.
-    shot "$lang-10-settings" "${ready[@]}" -debugInitialTab settings -debugLocationTracking YES
+    shot "$lang-12-settings" "${ready[@]}" -debugInitialTab settings -debugLocationTracking YES
 done

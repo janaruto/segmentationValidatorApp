@@ -9,8 +9,10 @@ import Foundation
 /// - `-debugShowYesterday YES`  open yesterday instead of today
 /// - `-debugInitialTab history|export|settings`
 /// - `-debugOpenEditor reminder|new`
+/// - `-debugSeedLocationPoints YES` only add today's location points (no segments)
 /// - `-debugLocationTracking YES` turn on the location points (grant the permission first)
-/// - `-debugLocationPrompt YES`  show a "Stationary?" question for the running segment
+/// - `-debugLocationPrompt YES`  show a question card ("Stationary?" while a moving segment runs)
+/// - `-debugMovingAnswer YES`    open the "How are you moving?" sheet
 /// - `-debugOpenMap YES`         open the map of the shown day
 enum DemoData {
     static func segments(now: Date, calendar: Calendar) -> [Segment] {
@@ -101,17 +103,13 @@ enum DemoData {
         }
     }
 
-    /// "Stationary?" for the running demo segment (the train just stopped).
-    static func stationaryPrompt(now: Date, running: Segment) -> LocationPrompt {
+    /// "Stationary?" while a moving segment runs (the train just stopped), otherwise "Moving detected?".
+    static func locationPrompt(now: Date, running: Segment?) -> LocationPrompt {
         let base = now.flooredToMinute
-        return LocationPrompt(
-            id: UUID(),
-            kind: .stationary,
-            askedAt: base,
-            since: base - 5 * 60,
-            distance: 40,
-            segmentID: running.id
-        )
+        if let running, running.type.isMoving {
+            return LocationPrompt(id: UUID(), kind: .stationary, askedAt: base, since: base - 5 * 60, distance: 40, segmentID: running.id)
+        }
+        return LocationPrompt(id: UUID(), kind: .moving, askedAt: base, since: base - 12 * 60, distance: 650, segmentID: running?.id)
     }
 }
 #endif

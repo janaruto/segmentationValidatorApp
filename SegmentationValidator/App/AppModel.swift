@@ -1069,16 +1069,17 @@ final class AppModel {
         if defaults.bool(forKey: "debugSeedDemoData"), isDataLoaded, book.segments.isEmpty {
             commit(SegmentBook(segments: DemoData.segments(now: .now, calendar: .current)))
         }
-        if defaults.bool(forKey: "debugSeedDemoData"), isDataLoaded, !hasLocationPoints {
+        if defaults.bool(forKey: "debugSeedDemoData") || defaults.bool(forKey: "debugSeedLocationPoints"),
+           isDataLoaded, !hasLocationPoints {
             unsavedPoints = DemoData.locationPoints(now: .now)
             flushPoints()
         }
         if defaults.bool(forKey: "debugLocationTracking") {
             settings.locationTracking = true
         }
-        if defaults.bool(forKey: "debugLocationPrompt"), let running = book.running {
+        if defaults.bool(forKey: "debugLocationPrompt") {
             // Only in memory: shows the question card without changing the stored state.
-            locationState.pending = DemoData.stationaryPrompt(now: .now, running: running)
+            locationState.pending = DemoData.locationPrompt(now: .now, running: book.running)
         }
         if defaults.bool(forKey: "debugShowYesterday") {
             selectedDay = Calendar.current.date(byAdding: .day, value: -1, to: selectedDay) ?? selectedDay
@@ -1100,6 +1101,11 @@ final class AppModel {
         }
         if defaults.bool(forKey: "debugOpenMap") {
             sheet = .locationMap(selectedDay)
+        }
+        if defaults.bool(forKey: "debugMovingAnswer") {
+            var prompt = DemoData.locationPrompt(now: .now, running: nil)
+            prompt.segmentID = book.running?.id
+            sheet = .movingAnswer(MovingAnswer(prompt: prompt, start: prompt.since, activity: .walking))
         }
     }
     #endif

@@ -37,18 +37,26 @@ struct LocationPromptCard: View {
                 Button {
                     model.answer(prompt, with: false)
                 } label: {
-                    Label("False", systemImage: "xmark")
-                        .lineLimit(1)
-                        .frame(maxWidth: .infinity)
+                    HStack(spacing: 6) {
+                        Image(systemName: "xmark")
+                        Text("False")
+                    }
+                    .lineLimit(1)
+                    .frame(maxWidth: .infinity)
                 }
                 .buttonStyle(.bordered)
 
                 Button {
                     confirm()
                 } label: {
-                    Label("True", systemImage: "checkmark")
-                        .lineLimit(1)
-                        .frame(maxWidth: .infinity)
+                    HStack(spacing: 6) {
+                        Image(systemName: "checkmark")
+                        Text("True")
+                    }
+                    .lineLimit(1)
+                    // Without this, iOS 26 draws the symbol in the tint color (invisible here).
+                    .foregroundStyle(.white)
+                    .frame(maxWidth: .infinity)
                 }
                 .buttonStyle(.borderedProminent)
             }
