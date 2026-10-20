@@ -9,7 +9,7 @@ import Foundation
 /// - `-debugShowYesterday YES`  open yesterday instead of today
 /// - `-debugInitialTab history|export|settings`
 /// - `-debugOpenEditor reminder|new`
-/// - `-debugSeedLocationPoints YES` only add today's location points (no segments)
+/// - `-debugSeedLocationPoints YES` only add location points for today and yesterday (no segments)
 /// - `-debugLocationTracking YES` turn on the location points (grant the permission first)
 /// - `-debugLocationPrompt YES`  show a question card ("Stationary?" while a moving segment runs)
 /// - `-debugMovingAnswer YES`    open the "How are you moving?" sheet

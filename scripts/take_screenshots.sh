@@ -57,9 +57,9 @@ for lang in en de; do
     xcrun simctl privacy "$DEVICE" grant location-always "$BUNDLE_ID" || true
     shot "$lang-01-onboarding" "${common[@]}"
 
-    # Still without segments: only today's location points.
+    # Still without segments: only location points. Yesterday has nothing else, so the map card is visible.
     points=("${common[@]}" -hasCompletedOnboarding YES -debugSeedLocationPoints YES)
-    shot "$lang-02-location-points" "${points[@]}"
+    shot "$lang-02-location-points" "${points[@]}" -debugShowYesterday YES
     shot "$lang-03-moving-answer" "${points[@]}" -debugMovingAnswer YES
 
     ready=("${common[@]}" -hasCompletedOnboarding YES -debugSeedDemoData YES -debugFakeDetections YES)

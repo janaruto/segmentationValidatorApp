@@ -1071,7 +1071,8 @@ final class AppModel {
         }
         if defaults.bool(forKey: "debugSeedDemoData") || defaults.bool(forKey: "debugSeedLocationPoints"),
            isDataLoaded, !hasLocationPoints {
-            unsavedPoints = DemoData.locationPoints(now: .now)
+            // Today and yesterday, so that a day without other content shows the map card.
+            unsavedPoints = DemoData.locationPoints(now: .now) + DemoData.locationPoints(now: .now.addingTimeInterval(-86_400))
             flushPoints()
         }
         if defaults.bool(forKey: "debugLocationTracking") {
