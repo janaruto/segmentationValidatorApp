@@ -49,6 +49,16 @@ Optionally the app saves a **GPS location point every 5 minutes** and asks *Movi
   lying still for 15+ minutes, the app asks you to end it – with the time you stopped filled in
 
 **Location points (GPS, optional)** – *Settings → Location (GPS) → Record location points*
+
+![Question "Stationary detected" with True and False, picking the movement type after "Moving detected", map of the day's location points](docs/screenshots/location-en.png)
+
+<details>
+<summary>Deutsch / German</summary>
+
+![Frage «Stillstand erkannt» mit True und False, Bewegungsart wählen nach «Bewegung erkannt», Karte der Standortpunkte](docs/screenshots/location-de.png)
+
+</details>
+
 - Every 5 minutes (adjustable: 1–30 min) the app saves a location point. GPS is switched on for a few
   seconds per point only; in between iOS uses the cell network, which costs very little battery
 - **Moving detected – True / False**: while you are stationary (a *Stationary* segment or none is running)

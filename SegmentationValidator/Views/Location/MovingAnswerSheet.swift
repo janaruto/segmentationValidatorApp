@@ -75,8 +75,8 @@ struct MovingAnswerSheet: View {
                         dismiss()
                     } label: {
                         Label("False – I am not moving", systemImage: "xmark.circle")
+                            .foregroundStyle(.red)
                     }
-                    .tint(.red)
                 }
             }
             .navigationTitle(answer.prompt.title)
