@@ -13,6 +13,8 @@ struct ExportView: View {
     @State private var exportError: String?
     @State private var showingImporter = false
     @State private var importMessage: String?
+    @State private var locationFile: LocationFile?
+    @State private var locationError: String?
 
     private struct ExportFile: Equatable {
         var url: URL
@@ -26,6 +28,16 @@ struct ExportView: View {
         var from: Date
         var until: Date
         var revision: Int
+    }
+
+    private struct LocationFile: Equatable {
+        var url: URL
+        var count: Int
+    }
+
+    private struct LocationExportKey: Hashable {
+        var export: ExportKey
+        var locationRevision: Int
     }
 
     var body: some View {
@@ -73,6 +85,10 @@ struct ExportView: View {
                     Text("Save it to Files, send it by e-mail or AirDrop it to your computer.")
                 }
 
+                if model.hasLocationPoints || model.settings.locationTracking {
+                    locationSection
+                }
+
                 if let file, file.rowCount > 0 {
                     Section {
                         ScrollView(.horizontal) {
@@ -106,6 +122,9 @@ struct ExportView: View {
             .navigationTitle("Export")
             .task(id: exportKey) {
                 regenerate()
+            }
+            .task(id: locationExportKey) {
+                await regenerateLocationFile()
             }
             .fileImporter(
                 isPresented: $showingImporter,
@@ -141,6 +160,43 @@ struct ExportView: View {
 
     private var exportKey: ExportKey {
         ExportKey(options: options, onlyRange: onlyRange, from: from, until: until, revision: model.revision)
+    }
+
+    private var locationExportKey: LocationExportKey {
+        LocationExportKey(export: exportKey, locationRevision: model.locationRevision)
+    }
+
+    private var locationSection: some View {
+        Section {
+            if let locationFile {
+                ShareLink(item: locationFile.url) {
+                    Label(L10n.format("Export %lld location points as CSV", locationFile.count), systemImage: "location")
+                        .font(.headline)
+                }
+                .disabled(locationFile.count == 0)
+            } else if let locationError {
+                Label(locationError, systemImage: "exclamationmark.triangle")
+                    .foregroundStyle(.red)
+            } else {
+                ProgressView()
+            }
+        } header: {
+            Text("Location points")
+        } footer: {
+            Text("One row per point: time, coordinates, accuracy, the movement type logged at that time and your True/False answers. Uses the range and format above.")
+        }
+    }
+
+    private func regenerateLocationFile() async {
+        do {
+            let range = onlyRange ? min(from, until)...max(from, until) : nil
+            let result = try await model.exportLocationFile(options: options, range: range)
+            locationFile = LocationFile(url: result.url, count: result.count)
+            locationError = nil
+        } catch {
+            locationFile = nil
+            locationError = error.localizedDescription
+        }
     }
 
     private func regenerate() {

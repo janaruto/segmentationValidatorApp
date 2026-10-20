@@ -52,4 +52,20 @@ enum Formatting {
     static func range(of segment: Segment, on day: Date) -> String {
         range(start: segment.start, end: segment.end, on: day)
     }
+
+    /// "8 m", "650 m", "1.2 km" (with the locale's decimal separator).
+    static func distance(_ meters: Double) -> String {
+        if meters < 995 {
+            let step: Double = meters < 100 ? 1 : 10
+            return "\(Int((max(0, meters) / step).rounded() * step)) m"
+        }
+        let kilometers = meters / 1000
+        let digits = kilometers < 10 ? 1 : 0
+        return "\(kilometers.formatted(.number.precision(.fractionLength(digits)))) km"
+    }
+
+    /// "14:05:12": location points are taken to the second.
+    static func timeWithSeconds(_ date: Date) -> String {
+        date.formatted(date: .omitted, time: .standard)
+    }
 }

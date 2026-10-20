@@ -36,6 +36,10 @@ struct RootView: View {
                     SegmentEditorSheet(request: request)
                 case .datePicker:
                     DatePickerSheet()
+                case .movingAnswer(let answer):
+                    MovingAnswerSheet(answer: answer)
+                case .locationMap(let day):
+                    LocationMapSheet(day: day)
                 }
             }
             .tint(Color.brand)

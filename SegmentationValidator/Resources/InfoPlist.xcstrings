@@ -24,13 +24,13 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Optional: iOS weckt die App, wenn du dich ein paar hundert Meter bewegst, damit Erinnerungen pünktlich kommen. Dein Standort wird nie gespeichert oder geteilt."
+            "value" : "Optional: Die App speichert alle paar Minuten einen Standortpunkt und fragt, ob du unterwegs oder angekommen bist. iOS kann die App ausserdem wecken, wenn du dich bewegst. Die Standortpunkte bleiben auf deinem iPhone und werden nirgendwohin gesendet."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Optional: iOS wakes the app when you move a few hundred meters, so movement reminders arrive on time. Your location is never stored or shared."
+            "value" : "Optional: the app saves a location point every few minutes and asks whether you are on the move or have arrived. iOS can also wake the app when you move. Location points stay on your iPhone and are never sent anywhere."
           }
         }
       }
@@ -41,13 +41,13 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Optional: iOS weckt die App, wenn du dich ein paar hundert Meter bewegst, damit Erinnerungen pünktlich kommen. Dein Standort wird nie gespeichert oder geteilt."
+            "value" : "Optional: Die App speichert alle paar Minuten einen Standortpunkt und fragt, ob du unterwegs oder angekommen bist. iOS kann die App ausserdem wecken, wenn du dich bewegst. Die Standortpunkte bleiben auf deinem iPhone und werden nirgendwohin gesendet."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Optional: iOS wakes the app when you move a few hundred meters, so movement reminders arrive on time. Your location is never stored or shared."
+            "value" : "Optional: the app saves a location point every few minutes and asks whether you are on the move or have arrived. iOS can also wake the app when you move. Location points stay on your iPhone and are never sent anywhere."
           }
         }
       }

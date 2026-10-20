@@ -88,15 +88,15 @@ struct OnboardingView: View {
     private var backgroundPage: some View {
         OnboardingPage(
             systemImage: "location.circle",
-            title: "Optional: reliable reminders",
-            text: "iOS only lets a closed app look at the motion sensor now and then. If you allow location access \"Always\", iOS wakes the app when you move a few hundred meters, so reminders arrive on time. The location itself is never stored. You can change this any time in Settings."
+            title: "Optional: location points",
+            text: "Every 5 minutes the app can save a location point – GPS is only switched on for a few seconds. If you are suddenly far away from the previous point, it asks whether you are on the move; if you hardly move during a trip, it asks whether you have arrived. Just answer True or False. The points stay on this iPhone, and you can change this any time in Settings."
         ) {
-            if model.settings.useLocationWakeUps {
+            if model.settings.locationTracking {
                 Label("Turned on", systemImage: "checkmark.circle.fill")
                     .foregroundStyle(.green)
             } else {
-                Button("Turn on reliable reminders") {
-                    model.settings.useLocationWakeUps = true
+                Button("Record location points") {
+                    model.settings.locationTracking = true
                 }
                 .buttonStyle(.bordered)
             }

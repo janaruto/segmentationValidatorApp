@@ -110,6 +110,40 @@ extension ReminderOutcome {
         case .quietHours: return String(localized: "Quiet hours: the reminder is postponed.")
         case .coolingDown: return String(localized: "A reminder was sent recently. The next one follows later.")
         case .sent: return String(localized: "Reminder sent.")
+        case .locationActive: return String(localized: "Location questions are on: while location points are recorded, they replace these reminders.")
+        }
+    }
+}
+
+extension LocationPromptKind {
+    var title: String {
+        switch self {
+        case .moving: return String(localized: "Moving detected")
+        case .stationary: return String(localized: "Stationary detected")
+        }
+    }
+}
+
+extension LocationPrompt {
+    var title: String {
+        kind.title
+    }
+
+    /// The question in the notification and on the day screen.
+    func question(stationaryDistance: Int) -> String {
+        switch kind {
+        case .moving:
+            return L10n.format(
+                "%1$@ away from where you were at %2$@. Are you on the move?",
+                Formatting.distance(distance),
+                Formatting.time(since)
+            )
+        case .stationary:
+            return L10n.format(
+                "Since %1$@ you have moved less than %2$@. Have you arrived?",
+                Formatting.time(since),
+                Formatting.distance(Double(stationaryDistance))
+            )
         }
     }
 }

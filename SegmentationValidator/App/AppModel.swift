@@ -27,14 +27,29 @@ struct EditorRequest: Identifiable {
     var origin: Origin
 }
 
+/// "True" on "Moving detected?": the sheet that asks how the user is moving.
+struct MovingAnswer: Identifiable {
+    var prompt: LocationPrompt
+    /// Estimated start of the movement.
+    var start: Date
+    /// What the motion sensor detected, if anything.
+    var activity: DetectedActivity?
+
+    var id: UUID { prompt.id }
+}
+
 enum ActiveSheet: Identifiable {
     case editor(EditorRequest)
     case datePicker
+    case movingAnswer(MovingAnswer)
+    case locationMap(Date)
 
     var id: String {
         switch self {
         case .editor(let request): return "editor-\(request.id.uuidString)"
         case .datePicker: return "date-picker"
+        case .movingAnswer(let answer): return "moving-\(answer.id.uuidString)"
+        case .locationMap(let day): return "map-\(Int(day.timeIntervalSince1970))"
         }
     }
 }
@@ -49,6 +64,8 @@ struct PermissionsSnapshot: Equatable {
     var motion: MotionPermission = .notDetermined
     var notifications: UNAuthorizationStatus = .notDetermined
     var location: CLAuthorizationStatus = .notDetermined
+    /// False when only the approximate location is allowed.
+    var preciseLocation = true
 }
 
 /// The app's state and the glue between the UI, the on-device storage and the sensors.
@@ -62,6 +79,7 @@ final class AppModel {
         static let dismissed = "dismissedSuggestions"
         static let onboarding = "hasCompletedOnboarding"
         static let reminderState = "reminderState"
+        static let locationState = "locationState"
     }
 
     // MARK: - Navigation
@@ -88,6 +106,16 @@ final class AppModel {
     private(set) var permissions = PermissionsSnapshot()
     private(set) var reminderState: ReminderState
 
+    // MARK: - Location points
+
+    /// What the location questions remember between points.
+    private(set) var locationState: LocationPromptState
+    /// Increases whenever location points change, e.g. to refresh the map and the export.
+    private(set) var locationRevision = 0
+    @ObservationIgnored private var pointsCache: [Date: [LocationPoint]] = [:]
+    /// Points that could not be written yet (e.g. while the phone is locked after a restart).
+    @ObservationIgnored private var unsavedPoints: [LocationPoint] = []
+
     // MARK: - Stored preferences
 
     private var storedSettings: DetectionSettings
@@ -99,7 +127,9 @@ final class AppModel {
     let motion = MotionService()
     let notifications = NotificationService()
     let location = LocationWakeService()
+    let tracker = LocationTracker()
     private let store: SegmentFileStore
+    private let pointStore: LocationPointStore
     private let defaults: UserDefaults
     @ObservationIgnored private var isEvaluating = false
     @ObservationIgnored private var undoExpiry: Task<Void, Never>?
@@ -113,11 +143,12 @@ final class AppModel {
             appropriateFor: nil,
             create: true
         )) ?? FileManager.default.temporaryDirectory
-        store = SegmentFileStore(url: support
-            .appendingPathComponent("SegmentValidator", isDirectory: true)
-            .appendingPathComponent("segments.json"))
+        let folder = support.appendingPathComponent("SegmentValidator", isDirectory: true)
+        store = SegmentFileStore(url: folder.appendingPathComponent("segments.json"))
+        pointStore = LocationPointStore(folder: folder.appendingPathComponent("Locations", isDirectory: true))
         storedSettings = Self.decode(DetectionSettings.self, from: defaults, key: Keys.settings) ?? DetectionSettings()
         reminderState = Self.decode(ReminderState.self, from: defaults, key: Keys.reminderState) ?? ReminderState()
+        locationState = Self.decode(LocationPromptState.self, from: defaults, key: Keys.locationState) ?? LocationPromptState()
         dismissedSuggestions = Set(defaults.stringArray(forKey: Keys.dismissed) ?? [])
         storedOnboardingDone = defaults.bool(forKey: Keys.onboarding)
         selectedDay = Calendar.current.startOfDay(for: .now)
@@ -131,6 +162,12 @@ final class AppModel {
         location.onAuthorizationChange = { [weak self] in
             self?.locationAuthorizationChanged()
         }
+        tracker.onFix = { [weak self] fix in
+            self?.recordPoint(fix)
+        }
+        tracker.onAuthorizationChange = { [weak self] in
+            self?.locationAuthorizationChanged()
+        }
         _ = NotificationCenter.default.addObserver(
             forName: UIApplication.protectedDataDidBecomeAvailableNotification,
             object: nil,
@@ -138,6 +175,7 @@ final class AppModel {
         ) { [weak self] _ in
             MainActor.assumeIsolated {
                 self?.loadSegmentsIfNeeded()
+                self?.flushPoints()
             }
         }
         #if DEBUG
@@ -153,8 +191,11 @@ final class AppModel {
             let old = storedSettings
             storedSettings = newValue
             Self.encode(newValue, to: defaults, key: Keys.settings)
-            if old.useLocationWakeUps != newValue.useLocationWakeUps || old.remindersEnabled != newValue.remindersEnabled {
-                configureLocationWakeUps()
+            if old.useLocationWakeUps != newValue.useLocationWakeUps
+                || old.remindersEnabled != newValue.remindersEnabled
+                || old.locationTracking != newValue.locationTracking
+                || old.locationInterval != newValue.locationInterval {
+                configureLocation()
             }
             if old.sensitivity != newValue.sensitivity {
                 detectedRuns = [:]
@@ -292,6 +333,7 @@ final class AppModel {
         resetDismissedSuggestions()
         reminderState = ReminderState()
         persistReminderState()
+        deleteLocationPoints()
     }
 
     // MARK: - Editor
@@ -437,8 +479,10 @@ final class AppModel {
         switch phase {
         case .active:
             loadSegmentsIfNeeded()
+            flushPoints()
             refreshPermissions()
             startLiveMotion()
+            tracker.measureIfDue(.appOpened)
             Task { await refreshDetections(for: selectedDay) }
         case .background:
             stopLiveMotion()
@@ -461,6 +505,7 @@ final class AppModel {
     }
 
     private func handleLocationWake() {
+        tracker.measureIfDue(.wakeUp)
         BackgroundTime.run("location-wake") { [weak self] in
             await self?.evaluateReminders()
         }
@@ -478,6 +523,8 @@ final class AppModel {
         loadSegmentsIfNeeded()
         guard isDataLoaded else { return .alreadyHandled }
         guard settings.remindersEnabled else { return record(.disabled) }
+        // While location points are recorded, "Moving detected?" and "Stationary?" take over.
+        guard !locationQuestionsActive else { return record(.locationActive) }
         guard motion.permission == .authorized else { return record(.noPermission) }
 
         let now = Date()
@@ -547,6 +594,29 @@ final class AppModel {
             await handleMovementReminder(actionIdentifier: actionIdentifier, reminder: reminder)
         case .staleSegment(let stale):
             await handleStaleReminder(actionIdentifier: actionIdentifier, stale: stale)
+        case .location(let prompt):
+            await handleLocationPrompt(actionIdentifier: actionIdentifier, prompt: prompt)
+        }
+    }
+
+    /// True or False on "Moving detected?" / "Stationary?".
+    private func handleLocationPrompt(actionIdentifier: String, prompt: LocationPrompt) async {
+        loadSegmentsIfNeeded()
+        switch actionIdentifier {
+        case NotificationService.trueAction:
+            if prompt.kind == .moving {
+                showDay(.now)
+                await confirmMoving(prompt)
+            } else {
+                confirmStationary(prompt)
+            }
+        case NotificationService.falseAction:
+            answer(prompt, with: false)
+        case UNNotificationDefaultActionIdentifier:
+            // The question is shown at the top of today's screen.
+            showDay(.now)
+        default:
+            break
         }
     }
 
@@ -636,7 +706,8 @@ final class AppModel {
             permissions = PermissionsSnapshot(
                 motion: motion.permission,
                 notifications: notificationStatus,
-                location: location.authorizationStatus
+                location: tracker.authorizationStatus,
+                preciseLocation: tracker.hasPreciseLocation
             )
         }
     }
@@ -653,24 +724,277 @@ final class AppModel {
         refreshPermissions()
     }
 
-    /// Starts or stops the optional location based wake-ups. Called on every launch.
-    func configureLocationWakeUps() {
-        let wanted = settings.useLocationWakeUps && settings.remindersEnabled
-        if wanted {
-            switch location.authorizationStatus {
+    /// Starts or stops the location points and the location wake-ups, asking for permission
+    /// if needed. Called on every launch.
+    func configureLocation() {
+        if settings.locationTracking || wantsLocationWakeUps {
+            switch tracker.authorizationStatus {
             case .notDetermined, .authorizedWhenInUse:
                 // iOS shows the "Always" prompt at most once; later calls are ignored.
-                location.requestAlwaysAuthorization()
+                tracker.requestAlwaysAuthorization()
             default:
                 break
             }
         }
-        location.setMonitoring(wanted)
+        applyLocationSettings()
+    }
+
+    /// Wake-ups relaunch the app after larger movements. Location tracking uses them as a
+    /// safety net in case iOS ended the app.
+    private var wantsLocationWakeUps: Bool {
+        settings.locationTracking || (settings.useLocationWakeUps && settings.remindersEnabled)
+    }
+
+    private func applyLocationSettings() {
+        location.setMonitoring(wantsLocationWakeUps)
+        if settings.locationTracking {
+            tracker.start(interval: TimeInterval(settings.locationInterval * 60), lastPoint: locationState.latest?.timestamp)
+        } else {
+            tracker.stop()
+        }
     }
 
     private func locationAuthorizationChanged() {
         refreshPermissions()
-        location.setMonitoring(settings.useLocationWakeUps && settings.remindersEnabled)
+        applyLocationSettings()
+    }
+
+    // MARK: - Location points
+
+    /// The location points of a day, oldest first.
+    func points(on day: Date) -> [LocationPoint] {
+        _ = locationRevision
+        let calendar = Calendar.current
+        let dayStart = calendar.startOfDay(for: day)
+        let stored = loadPoints(dayStart) ?? []
+        let unsaved = unsavedPoints.filter { calendar.isDate($0.timestamp, inSameDayAs: dayStart) }
+        guard !unsaved.isEmpty else { return stored }
+        let known = Set(stored.map(\.id))
+        return (stored + unsaved.filter { !known.contains($0.id) }).sorted { $0.timestamp < $1.timestamp }
+    }
+
+    var hasLocationPoints: Bool {
+        _ = locationRevision
+        return !unsavedPoints.isEmpty || !pointStore.storedDays(calendar: .current).isEmpty
+    }
+
+    /// True while location points arrive and the questions are on. Motion reminders pause then.
+    var locationQuestionsActive: Bool {
+        guard settings.locationTracking, settings.locationPrompts, let previous = locationState.previous else { return false }
+        let interval = TimeInterval(settings.locationInterval * 60)
+        return Date().timeIntervalSince(previous.timestamp) < 2 * interval + 120
+    }
+
+    /// The open question for the card on today's screen, as long as it still applies.
+    var openLocationPrompt: LocationPrompt? {
+        guard let prompt = locationState.pending,
+              Date().timeIntervalSince(prompt.askedAt) < 6 * 3600,
+              book.running?.id == prompt.segmentID else { return nil }
+        return prompt
+    }
+
+    /// "Measure now" in the settings.
+    func measureLocationNow() {
+        tracker.measure(.manual)
+    }
+
+    private func recordPoint(_ fix: LocationTracker.Fix) {
+        var point = LocationPoint(fix.location, trigger: fix.trigger)
+        loadSegmentsIfNeeded()
+        if isDataLoaded {
+            let result = LocationPromptEngine.evaluate(
+                point: point,
+                running: book.running,
+                state: locationState,
+                settings: settings,
+                calendar: .current
+            )
+            locationState = result.state
+            if let prompt = result.prompt {
+                point.prompt = prompt.kind
+                Task { await postLocationPrompt(prompt) }
+            }
+        } else {
+            // Without the segments the questions cannot be decided; just keep the point.
+            locationState.latest = point
+        }
+        persistLocationState()
+        unsavedPoints.append(point)
+        flushPoints()
+        Task { await evaluateReminders() }
+    }
+
+    private func postLocationPrompt(_ prompt: LocationPrompt) async {
+        guard await notifications.canNotify() else { return }
+        await notifications.post(prompt, running: book.running, stationaryDistance: settings.stationaryDistance)
+    }
+
+    /// Writes points that are not stored yet into their day files.
+    private func flushPoints() {
+        guard !unsavedPoints.isEmpty else { return }
+        let calendar = Calendar.current
+        var saved = Set<UUID>()
+        for (day, points) in Dictionary(grouping: unsavedPoints, by: { calendar.startOfDay(for: $0.timestamp) }) {
+            guard let existing = loadPoints(day) else { continue }
+            let known = Set(existing.map(\.id))
+            let merged = (existing + points.filter { !known.contains($0.id) }).sorted { $0.timestamp < $1.timestamp }
+            do {
+                try pointStore.save(merged, day: day, calendar: calendar)
+                pointsCache[day] = merged
+                saved.formUnion(points.map(\.id))
+            } catch {
+                continue
+            }
+        }
+        unsavedPoints.removeAll { saved.contains($0.id) }
+        locationRevision += 1
+    }
+
+    /// The stored points of a day, or nil while the file cannot be read (locked after a restart).
+    private func loadPoints(_ day: Date) -> [LocationPoint]? {
+        if let cached = pointsCache[day] {
+            return cached
+        }
+        do {
+            let points = try pointStore.load(day: day, calendar: .current)
+            pointsCache[day] = points
+            return points
+        } catch is DecodingError {
+            // Damaged: keep a copy and start the day fresh instead of failing forever.
+            pointStore.quarantine(day: day, calendar: .current)
+            pointsCache[day] = []
+            return []
+        } catch {
+            return nil
+        }
+    }
+
+    private func setAnswer(_ answer: Bool, forPoint id: UUID, takenAt date: Date) {
+        if let index = unsavedPoints.firstIndex(where: { $0.id == id }) {
+            unsavedPoints[index].answer = answer
+            flushPoints()
+            return
+        }
+        let calendar = Calendar.current
+        let day = calendar.startOfDay(for: date)
+        guard var points = loadPoints(day), let index = points.firstIndex(where: { $0.id == id }) else { return }
+        points[index].answer = answer
+        if (try? pointStore.save(points, day: day, calendar: calendar)) != nil {
+            pointsCache[day] = points
+            locationRevision += 1
+        }
+    }
+
+    /// Stores the answer to a question and removes it from the screen and the notification center.
+    func answer(_ prompt: LocationPrompt, with answer: Bool) {
+        setAnswer(answer, forPoint: prompt.id, takenAt: prompt.askedAt)
+        if locationState.pending?.id == prompt.id {
+            locationState.pending = nil
+            persistLocationState()
+        }
+        notifications.removeDelivered(prompt)
+    }
+
+    /// "True" on "Moving detected?": asks how the user is moving, with the start estimated from
+    /// the location points and, if available, the motion sensor.
+    func confirmMoving(_ prompt: LocationPrompt) async {
+        var answer = MovingAnswer(prompt: prompt, start: prompt.since, activity: nil)
+        let now = Date()
+        if motion.permission == .authorized,
+           let samples = try? await motion.samples(from: prompt.since.addingTimeInterval(-3600), to: max(prompt.askedAt, now)) {
+            let runs = MovementDetector.runs(from: samples, until: now, parameters: settings.sensitivity.parameters)
+            if let departure = LocationPromptEngine.departure(for: prompt, runs: runs) {
+                answer.start = departure.start
+                answer.activity = departure.activity
+            }
+        }
+        answer.start = answer.start.flooredToMinute
+        sheet = .movingAnswer(answer)
+    }
+
+    /// Starts the moving segment chosen in the "How are you moving?" sheet.
+    @discardableResult
+    func startMoving(_ type: MovementType, at start: Date, answering prompt: LocationPrompt) -> Bool {
+        var updated = book
+        let now = Date()
+        var at = min(start, now)
+        if let running = updated.running {
+            at = min(max(at, running.start.addingTimeInterval(60)), now)
+        } else if let last = updated.previous(before: now), let end = last.end, end > at, end <= now {
+            at = end
+        }
+        updated.startLive(type, at: at, source: .location)
+        guard commit(updated) else { return false }
+        answer(prompt, with: true)
+        return true
+    }
+
+    /// "True" on "Stationary?": ends the moving segment where the stop began and starts Stationary.
+    func confirmStationary(_ prompt: LocationPrompt) {
+        guard let running = book.running, running.id == prompt.segmentID, running.type.isMoving else {
+            // The segment changed in the meantime: only keep the answer.
+            answer(prompt, with: true)
+            return
+        }
+        var updated = book
+        let at = min(max(prompt.since, running.start.addingTimeInterval(60)), Date())
+        let stationary = updated.startLive(.stationary, at: at, source: .location)
+        guard commit(updated) else { return }
+        // Compare the next points with the place where the user stopped.
+        locationState.segmentID = stationary.id
+        locationState.anchor = locationState.previous
+        locationState.lastNearAnchor = locationState.previous
+        locationState.stopStart = nil
+        locationState.movingAsked = false
+        answer(prompt, with: true)
+        persistLocationState()
+    }
+
+    func deleteLocationPoints() {
+        try? pointStore.deleteAll()
+        pointsCache = [:]
+        unsavedPoints = []
+        locationState = LocationPromptState()
+        persistLocationState()
+        locationRevision += 1
+    }
+
+    /// Sends a sample "Moving detected?" question in a few seconds.
+    func sendTestLocationPrompt() async {
+        let now = Date()
+        let prompt = LocationPrompt(
+            id: UUID(),
+            kind: .moving,
+            askedAt: now,
+            since: now.addingTimeInterval(-7 * 60).flooredToMinute,
+            distance: 650,
+            segmentID: book.running?.id
+        )
+        await notifications.post(prompt, running: book.running, stationaryDistance: settings.stationaryDistance, delay: 5)
+    }
+
+    /// Writes the location points as CSV to a temporary file for the share sheet.
+    func exportLocationFile(options: CSVOptions, range: ClosedRange<Date>?) async throws -> (url: URL, count: Int) {
+        flushPoints()
+        let calendar = Calendar.current
+        let store = pointStore
+        let unsaved = unsavedPoints
+        let book = self.book
+        let from = range.map { calendar.startOfDay(for: $0.lowerBound) } ?? .distantPast
+        let until = range.map { calendar.dayInterval(containing: $0.upperBound).end } ?? .distantFuture
+        return try await Task.detached(priority: .userInitiated) {
+            var points = store.points(from: from, to: until, calendar: calendar)
+            let known = Set(points.map(\.id))
+            points += unsaved.filter { !known.contains($0.id) && $0.timestamp >= from && $0.timestamp <= until }
+            points.sort { $0.timestamp < $1.timestamp }
+            let data = LocationCSVExport.data(for: points, book: book, options: options, timeZone: .current, now: Date())
+            let name = LocationCSVExport.fileName(first: points.first?.timestamp, last: points.last?.timestamp, timeZone: .current)
+            let folder = FileManager.default.temporaryDirectory.appendingPathComponent("Export", isDirectory: true)
+            try FileManager.default.createDirectory(at: folder, withIntermediateDirectories: true)
+            let url = folder.appendingPathComponent(name)
+            try data.write(to: url, options: .atomic)
+            return (url: url, count: points.count)
+        }.value
     }
 
     // MARK: - Export and import
@@ -745,6 +1069,17 @@ final class AppModel {
         if defaults.bool(forKey: "debugSeedDemoData"), isDataLoaded, book.segments.isEmpty {
             commit(SegmentBook(segments: DemoData.segments(now: .now, calendar: .current)))
         }
+        if defaults.bool(forKey: "debugSeedDemoData"), isDataLoaded, !hasLocationPoints {
+            unsavedPoints = DemoData.locationPoints(now: .now)
+            flushPoints()
+        }
+        if defaults.bool(forKey: "debugLocationTracking") {
+            settings.locationTracking = true
+        }
+        if defaults.bool(forKey: "debugLocationPrompt"), let running = book.running {
+            // Only in memory: shows the question card without changing the stored state.
+            locationState.pending = DemoData.stationaryPrompt(now: .now, running: running)
+        }
         if defaults.bool(forKey: "debugShowYesterday") {
             selectedDay = Calendar.current.date(byAdding: .day, value: -1, to: selectedDay) ?? selectedDay
         }
@@ -763,6 +1098,9 @@ final class AppModel {
         default:
             break
         }
+        if defaults.bool(forKey: "debugOpenMap") {
+            sheet = .locationMap(selectedDay)
+        }
     }
     #endif
 
@@ -770,6 +1108,10 @@ final class AppModel {
 
     private func persistReminderState() {
         Self.encode(reminderState, to: defaults, key: Keys.reminderState)
+    }
+
+    private func persistLocationState() {
+        Self.encode(locationState, to: defaults, key: Keys.locationState)
     }
 
     private static func decode<T: Decodable>(_ type: T.Type, from defaults: UserDefaults, key: String) -> T? {

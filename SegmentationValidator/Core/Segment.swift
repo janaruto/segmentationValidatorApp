@@ -12,6 +12,8 @@ struct Segment: Codable, Identifiable, Hashable, Sendable {
         case suggestion
         /// Created from a movement reminder notification.
         case reminder
+        /// Started by answering a location question ("Moving detected?" / "Stationary?").
+        case location
         /// Imported from a CSV file.
         case imported
     }

@@ -46,12 +46,13 @@ struct MovementTypeGrid: View {
     @Binding var selection: MovementType?
     /// Types to emphasise, e.g. the vehicles when the phone detected "some vehicle".
     var highlighted: [MovementType] = []
+    var types: [MovementType] = MovementType.allCases
 
     private let columns = [GridItem(.adaptive(minimum: 92), spacing: 10)]
 
     var body: some View {
         LazyVGrid(columns: columns, spacing: 10) {
-            ForEach(MovementType.allCases) { type in
+            ForEach(types) { type in
                 let isSelected = selection == type
                 Button {
                     selection = type

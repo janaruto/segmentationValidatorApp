@@ -12,9 +12,9 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
         UNUserNotificationCenter.current().delegate = notificationDelegate
         let model = AppModel.shared
         model.notifications.registerCategories()
-        // Re-arm the optional location wake-ups: when iOS relaunched the app for a location
+        // Re-arm location tracking and the wake-ups: when iOS relaunched the app for a location
         // event, the event is only delivered after monitoring was started again.
-        model.configureLocationWakeUps()
+        model.configureLocation()
         return true
     }
 }

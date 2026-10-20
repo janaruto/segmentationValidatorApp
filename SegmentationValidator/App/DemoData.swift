@@ -9,6 +9,9 @@ import Foundation
 /// - `-debugShowYesterday YES`  open yesterday instead of today
 /// - `-debugInitialTab history|export|settings`
 /// - `-debugOpenEditor reminder|new`
+/// - `-debugLocationTracking YES` turn on the location points (grant the permission first)
+/// - `-debugLocationPrompt YES`  show a "Stationary?" question for the running segment
+/// - `-debugOpenMap YES`         open the map of the shown day
 enum DemoData {
     static func segments(now: Date, calendar: Calendar) -> [Segment] {
         let today = calendar.startOfDay(for: now)
@@ -59,6 +62,56 @@ enum DemoData {
 
     static func reminder(now: Date) -> Reminder {
         Reminder(start: now.flooredToMinute - 12 * 60, end: nil, activity: .walking)
+    }
+
+    /// A location point every 5 minutes along today's demo segments in Zurich.
+    static func locationPoints(now: Date) -> [LocationPoint] {
+        let base = now.flooredToMinute
+        let home = (47.3925, 8.5235)
+        let tramStop = (47.3911, 8.5302)
+        let bellevue = (47.3668, 8.5452)
+        let mainStation = (47.3779, 8.5402)
+        let winterthur = (47.4999, 8.7236)
+        // (minutes relative to now, position): the path follows the demo segments.
+        let waypoints: [(Double, (Double, Double))] = [
+            (-180, home), (-95, home), (-84, tramStop), (-60, bellevue), (-52, bellevue),
+            (-40, mainStation), (-6, winterthur), (0, winterthur),
+        ]
+        func position(at minute: Double) -> (Double, Double) {
+            for (from, to) in zip(waypoints, waypoints.dropFirst()) where minute <= to.0 {
+                let fraction = to.0 == from.0 ? 0 : (minute - from.0) / (to.0 - from.0)
+                return (
+                    from.1.0 + (to.1.0 - from.1.0) * fraction,
+                    from.1.1 + (to.1.1 - from.1.1) * fraction
+                )
+            }
+            return winterthur
+        }
+        return stride(from: -180, through: 0, by: 5).enumerated().map { index, minute in
+            let (latitude, longitude) = position(at: Double(minute))
+            // A little GPS noise (about 10 m), the same on every run.
+            let jitter = Double((index * 37) % 7 - 3) * 0.00004
+            return LocationPoint(
+                timestamp: base.addingTimeInterval(Double(minute) * 60),
+                latitude: latitude + jitter,
+                longitude: longitude - jitter,
+                accuracy: Double(5 + (index * 13) % 11),
+                trigger: .interval
+            )
+        }
+    }
+
+    /// "Stationary?" for the running demo segment (the train just stopped).
+    static func stationaryPrompt(now: Date, running: Segment) -> LocationPrompt {
+        let base = now.flooredToMinute
+        return LocationPrompt(
+            id: UUID(),
+            kind: .stationary,
+            askedAt: base,
+            since: base - 5 * 60,
+            distance: 40,
+            segmentID: running.id
+        )
     }
 }
 #endif

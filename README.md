@@ -4,7 +4,8 @@ Log your day as **movement segments** – start time, end time and movement type
 ground truth for validating trip/mode segmentations. The iPhone's motion sensor notices when
 you start moving and **reminds you to log the segment**, with the day and the times already
 filled in and the previous segment shown so you can check that everything connects.
-Everything is exported as **CSV**.
+Optionally the app saves a **GPS location point every 5 minutes** and asks *Moving detected?* or
+*Stationary detected?* – you answer **True** or **False**. Everything is exported as **CSV**.
 
 - 📱 Native SwiftUI app for iPhone (iOS 17+), English and German (follows the iPhone language)
 - 🔒 All data stays on the phone – no account, no server, no costs
@@ -47,10 +48,30 @@ Everything is exported as **CSV**.
 - **Forgotten live segment?** If a moving segment (e.g. *Walking*) is still running but the phone has been
   lying still for 15+ minutes, the app asks you to end it – with the time you stopped filled in
 
+**Location points (GPS, optional)** – *Settings → Location (GPS) → Record location points*
+- Every 5 minutes (adjustable: 1–30 min) the app saves a location point. GPS is switched on for a few
+  seconds per point only; in between iOS uses the cell network, which costs very little battery
+- **Moving detected – True / False**: while you are stationary (a *Stationary* segment or none is running)
+  and a point is more than **400 m** away from the previous point (or from where you stayed, so slow
+  walks count too). *True* opens the app: pick the movement type, the start is filled in (from the
+  location points and, if available, the motion sensor). *False* just dismisses the question
+- **Stationary detected – True / False**: while a moving segment is running and you moved less than
+  **150 m** in one interval. *True* ends the moving segment where you stopped and starts *Stationary* –
+  directly from the notification, without opening the app
+- Touch and hold the notification to see the buttons. The open question is also shown at the top of
+  the day screen. Each question comes once; the next one only after you stayed somewhere again or moved
+  on. Both distances are adjustable, quiet hours apply
+- While location points are recorded, these questions replace the motion sensor reminders, so you never
+  get two notifications for the same movement
+- **Map** of each day's points on the day screen, colored by the logged movement type. Tap a point for
+  its time, accuracy, distance and your answer
+- The answers are stored with the points (`prompt`, `answer` columns), so the detection can be evaluated
+
 **Data**
 - CSV export of everything or a date range, comma or semicolon separated, optional UTF-8 BOM for
   Excel; share via Files, AirDrop, Mail, …
 - CSV import (backup/restore, moving to a new iPhone) – existing segments are updated, nothing is deleted
+- Separate CSV export of the location points (same range and format options)
 - Month overview with the logged movement types per day and the time per type
 
 ## How the reminders work (and what iOS allows)
@@ -67,11 +88,18 @@ When does the app get a chance to run?
 |---|---|---|
 | Background App Refresh | nothing (Background App Refresh on) | decided by iOS – sometimes every ~15 minutes, sometimes hours |
 | **Reliable background reminders** (Settings → Background) | location access "Always" | iOS wakes the app after you moved a few hundred meters, so reminders arrive within minutes |
+| **Location points** (Settings → Location (GPS)) | location access "Always" recommended | every 5 minutes; the app keeps running in the background |
 | Opening the app | – | detected movements are always shown on the day screen |
 
-The location is only used as a wake-up signal; coordinates are never read, stored or sent. Because
-the start time always comes from the sensor history, a reminder that arrives late still suggests
-the correct start time. *Settings → Test* sends a test reminder and lets you run a check manually.
+With *Reliable background reminders* the location is only a wake-up signal and is not stored. With
+*Record location points* the points are stored – on the iPhone only. Because the start time always
+comes from the sensor history, a reminder that arrives late still suggests the correct start time.
+*Settings → Test* sends a test reminder or a test GPS question and lets you run a check manually.
+
+To keep taking points in the background, the app keeps a very coarse location update running between
+two points (cell network only, GPS off) and asks for GPS accuracy for a few seconds every 5 minutes.
+If iOS ends the app anyway (or you swipe it away), it is relaunched after the next larger movement
+(location access "Always" needed). Approximate location is not enough – keep *Precise Location* on.
 
 ## Install on your iPhone – free
 
@@ -127,7 +155,7 @@ offset and are the precise values.
 | `start_iso` | `2026-10-15T08:12:00+02:00` | Start, ISO 8601 with offset |
 | `end_iso` | `2026-10-15T08:40:00+02:00` | End, ISO 8601 with offset |
 | `timezone` | `Europe/Zurich` | Time zone used for the local columns |
-| `source` | `reminder` | How the segment was created: `manual`, `live`, `suggestion`, `reminder`, `imported` |
+| `source` | `reminder` | How the segment was created: `manual`, `live`, `suggestion`, `reminder`, `location` (answered a GPS question), `imported` |
 | `detected_activity` | `automotive` | What the motion sensor detected, if the segment came from a detection |
 | `id` | `6f9619ff-…` | Stable id (used by the import to update instead of duplicate) |
 | `created_at`, `updated_at` | ISO 8601 | Audit timestamps |
@@ -137,10 +165,30 @@ import pandas as pd
 segments = pd.read_csv("segments.csv", parse_dates=["start_iso", "end_iso"])
 ```
 
+### Location points CSV
+
+One row per location point, oldest first (*Export → Location points*).
+
+| Column | Example | Description |
+|---|---|---|
+| `date`, `time` | `2026-10-15`, `09:15:03` | Local date and time |
+| `timestamp_iso` | `2026-10-15T09:15:03+02:00` | ISO 8601 with offset |
+| `timezone` | `Europe/Zurich` | Time zone used for the local columns |
+| `latitude`, `longitude` | `47.377912`, `8.540192` | WGS 84, degrees |
+| `accuracy_m` | `8.0` | Horizontal accuracy (radius in meters). Points above 100 m are not used for the questions |
+| `altitude_m`, `speed_mps` | `412.3`, `1.40` | If known |
+| `distance_m` | `652` | Distance from the previous point in the file |
+| `movement_type` | `walking` | The segment logged at that time (empty in gaps) |
+| `trigger` | `interval` | `interval`, `app_opened`, `wake_up`, `manual` |
+| `prompt` | `moving` | Question asked because of this point: `moving` or `stationary` |
+| `answer` | `true` | Your answer: `true`, `false` or empty |
+| `id` | `0b6f…` | Stable id |
+
 ## Privacy and data safety
 
 - Segments are stored in a JSON file in the app's private storage on the iPhone (written atomically).
-  It is part of the normal iPhone/iCloud device backup.
+  Location points (only if you turned them on) are stored in one file per day next to it. Both are
+  part of the normal iPhone/iCloud device backup. *Settings → Data* deletes the location points.
 - Nothing is sent anywhere. Notifications are local notifications scheduled by the phone itself.
 - Export a CSV now and then as an additional backup (*Export* tab).
 
@@ -149,8 +197,9 @@ segments = pd.read_csv("segments.csv", parse_dates=["start_iso", "end_iso"])
 ```
 SegmentationValidator/            the app (Xcode 16+ "synchronized folder": new files are picked up automatically)
 ├── App/                          app entry point, AppModel (state + glue), debug demo data
-├── Core/                         platform independent logic: model, validation, detection, reminders, CSV
-├── Services/                     Core Motion, notifications, background refresh, optional location wake-ups
+├── Core/                         platform independent logic: model, validation, detection, reminders,
+│                                 location questions, CSV
+├── Services/                     Core Motion, notifications, background refresh, location points and wake-ups
 ├── Views/                        SwiftUI screens
 ├── Support/                      formatting and UI helpers
 └── Resources/                    assets, Localizable.xcstrings (German), InfoPlist.xcstrings

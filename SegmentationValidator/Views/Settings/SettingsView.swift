@@ -10,13 +10,18 @@ struct SettingsView: View {
     @State private var checkMessage: String?
     @State private var isChecking = false
     @State private var testSent = false
+    @State private var testQuestionSent = false
     @State private var confirmingDeleteAll = false
+    @State private var confirmingDeletePoints = false
+    @State private var isMeasuring = false
 
     var body: some View {
         @Bindable var model = model
 
         NavigationStack {
             Form {
+                locationSection
+
                 Section {
                     Toggle("Movement reminders", isOn: $model.settings.remindersEnabled)
                     if model.settings.remindersEnabled {
@@ -41,7 +46,7 @@ struct SettingsView: View {
                     }
                 }
 
-                if model.settings.remindersEnabled {
+                if model.settings.remindersEnabled || asksLocationQuestions {
                     Section {
                         Toggle("Quiet hours", isOn: $model.settings.quietHoursEnabled)
                         if model.settings.quietHoursEnabled {
@@ -49,9 +54,11 @@ struct SettingsView: View {
                             DatePicker("Until", selection: minutes(\.quietHoursEnd), displayedComponents: .hourAndMinute)
                         }
                     } footer: {
-                        Text("No reminders during quiet hours. Movements are still detected and shown in the app.")
+                        Text("No reminders or questions during quiet hours. Movements are still detected and shown in the app.")
                     }
+                }
 
+                if model.settings.remindersEnabled && !model.settings.locationTracking {
                     Section {
                         Toggle("Reliable background reminders", isOn: $model.settings.useLocationWakeUps)
                         if model.settings.useLocationWakeUps {
@@ -93,6 +100,19 @@ struct SettingsView: View {
                     }
                     Button {
                         Task {
+                            await model.sendTestLocationPrompt()
+                            testQuestionSent = true
+                        }
+                    } label: {
+                        Label("Send a test GPS question", systemImage: "location")
+                    }
+                    if testQuestionSent {
+                        Text("The question arrives in 5 seconds. Touch and hold it to answer True or False.")
+                            .font(.footnote)
+                            .foregroundStyle(.secondary)
+                    }
+                    Button {
+                        Task {
                             isChecking = true
                             let outcome = await model.evaluateReminders()
                             checkMessage = outcome.message
@@ -124,13 +144,31 @@ struct SettingsView: View {
 
                 Section {
                     LabeledContent("Logged segments", value: "\(model.book.segments.count)")
+                    if model.hasLocationPoints {
+                        Button(role: .destructive) {
+                            confirmingDeletePoints = true
+                        } label: {
+                            Label("Delete location points", systemImage: "location.slash")
+                        }
+                        .confirmationDialog(
+                            "Delete all location points?",
+                            isPresented: $confirmingDeletePoints,
+                            titleVisibility: .visible
+                        ) {
+                            Button("Delete location points", role: .destructive) {
+                                model.deleteLocationPoints()
+                            }
+                        } message: {
+                            Text("Your segments are kept. Export the location points first if you want to keep a copy.")
+                        }
+                    }
                     Button(role: .destructive) {
                         confirmingDeleteAll = true
                     } label: {
                         Label("Delete all data", systemImage: "trash")
                     }
                     .confirmationDialog(
-                        "Delete all segments?",
+                        "Delete all data?",
                         isPresented: $confirmingDeleteAll,
                         titleVisibility: .visible
                     ) {
@@ -138,14 +176,14 @@ struct SettingsView: View {
                             model.deleteAllData()
                         }
                     } message: {
-                        Text("This cannot be undone. Export a CSV first if you want to keep a copy.")
+                        Text("Deletes all segments and location points. This cannot be undone. Export a CSV first if you want to keep a copy.")
                     }
                 } header: {
                     Text("Data")
                 }
 
                 Section {
-                    Label("No account, no server, no tracking. Everything stays on this iPhone.", systemImage: "lock.shield")
+                    Label("No account, no server. Everything stays on this iPhone.", systemImage: "lock.shield")
                         .font(.footnote)
                     Button("Show introduction again") {
                         model.hasCompletedOnboarding = false
@@ -159,6 +197,108 @@ struct SettingsView: View {
             .onAppear {
                 model.refreshPermissions()
             }
+        }
+    }
+
+    // MARK: - Location
+
+    private var asksLocationQuestions: Bool {
+        model.settings.locationTracking && model.settings.locationPrompts
+    }
+
+    @ViewBuilder
+    private var locationSection: some View {
+        @Bindable var model = model
+        let settings = model.settings
+
+        Section {
+            Toggle("Record location points", isOn: $model.settings.locationTracking)
+            if settings.locationTracking {
+                Picker("Every", selection: $model.settings.locationInterval) {
+                    ForEach(DetectionSettings.locationIntervalChoices, id: \.self) { minutes in
+                        Text(verbatim: "\(minutes) min").tag(minutes)
+                    }
+                }
+                Toggle("Ask when moving or stationary", isOn: $model.settings.locationPrompts)
+                if settings.locationPrompts {
+                    Picker("Moving from", selection: $model.settings.movingDistance) {
+                        ForEach(DetectionSettings.movingDistanceChoices, id: \.self) { meters in
+                            Text(verbatim: Formatting.distance(Double(meters))).tag(meters)
+                        }
+                    }
+                    Picker("Stationary below", selection: $model.settings.stationaryDistance) {
+                        ForEach(DetectionSettings.stationaryDistanceChoices, id: \.self) { meters in
+                            Text(verbatim: Formatting.distance(Double(meters))).tag(meters)
+                        }
+                    }
+                }
+                PermissionRow(
+                    title: String(localized: "Location \"Always\""),
+                    systemImage: "location",
+                    state: locationState,
+                    request: { model.configureLocation() },
+                    openSettings: openAppSettings
+                )
+                if !model.permissions.preciseLocation && locationState != .notAsked && locationState != .denied {
+                    HStack {
+                        Label("Precise location is off", systemImage: "exclamationmark.triangle.fill")
+                            .foregroundStyle(.orange)
+                        Spacer()
+                        Button("Open Settings", action: openAppSettings)
+                            .buttonStyle(.bordered)
+                            .controlSize(.small)
+                    }
+                }
+                locationStatusRows
+            }
+        } header: {
+            Text("Location (GPS)")
+        } footer: {
+            if settings.locationTracking && settings.locationPrompts {
+                Text(L10n.format(
+                    "Every %1$lld min the app switches on GPS for a few seconds and saves a location point on this iPhone. More than %2$@ from the previous point while not moving: “Moving detected”. Less than %3$@ in one interval while a moving segment runs: “Stationary detected”. Answer True or False. While points are recorded, these questions replace the motion reminders below.",
+                    settings.locationInterval,
+                    Formatting.distance(Double(settings.movingDistance)),
+                    Formatting.distance(Double(settings.stationaryDistance))
+                ))
+            } else if settings.locationTracking {
+                Text(L10n.format("Every %lld min the app switches on GPS for a few seconds and saves a location point on this iPhone.", settings.locationInterval))
+            } else {
+                Text("Saves a location point every few minutes and asks True or False when you start moving or stop. GPS is only switched on briefly, the points stay on this iPhone and can be exported as CSV.")
+            }
+        }
+    }
+
+    @ViewBuilder
+    private var locationStatusRows: some View {
+        let today = model.points(on: .now)
+        if let latest = model.locationState.latest {
+            LabeledContent("Last point") {
+                Text(verbatim: "\(Formatting.shortDay(latest.timestamp)), \(Formatting.time(latest.timestamp)) · ±\(Formatting.distance(latest.accuracy))")
+                    .monospacedDigit()
+            }
+        }
+        LabeledContent("Points today", value: "\(today.count)")
+        Button {
+            isMeasuring = true
+            model.measureLocationNow()
+            Task {
+                // The measurement takes at most about 20 seconds.
+                try? await Task.sleep(for: .seconds(25))
+                isMeasuring = false
+            }
+        } label: {
+            HStack {
+                Label("Measure now", systemImage: "location.viewfinder")
+                if isMeasuring {
+                    Spacer()
+                    ProgressView()
+                }
+            }
+        }
+        .disabled(isMeasuring || locationState == .notAsked || locationState == .denied)
+        .onChange(of: model.locationState.latest?.id) {
+            isMeasuring = false
         }
     }
 
@@ -192,7 +332,7 @@ struct SettingsView: View {
             title: String(localized: "Location \"Always\""),
             systemImage: "location",
             state: locationState,
-            request: { model.configureLocationWakeUps() },
+            request: { model.configureLocation() },
             openSettings: openAppSettings
         )
     }

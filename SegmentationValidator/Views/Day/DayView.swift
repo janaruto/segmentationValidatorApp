@@ -13,6 +13,12 @@ struct DayView: View {
 
         NavigationStack {
             List {
+                if isToday, let prompt = model.openLocationPrompt {
+                    Section {
+                        LocationPromptCard(prompt: prompt)
+                    }
+                }
+
                 if isToday {
                     Section {
                         LiveLoggingCard()
@@ -39,6 +45,8 @@ struct DayView: View {
                 }
 
                 SuggestionsSection(day: day, suggestions: suggestions)
+
+                LocationDaySection(day: day)
             }
             .listStyle(.insetGrouped)
             .animation(.default, value: model.revision)

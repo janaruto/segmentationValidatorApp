@@ -1,6 +1,16 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "%1$@ away from where you were at %2$@. Are you on the move?" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ entfernt von dort, wo du um %2$@ warst. Bist du unterwegs?"
+          }
+        }
+      }
+    },
     "%1$@ is still running, but you seem to have stopped at %2$@. Tap to end it." : {
       "localizations" : {
         "de" : {
@@ -31,12 +41,32 @@
         }
       }
     },
+    "%1$lld points · %2$@" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$lld Punkte · %2$@"
+          }
+        }
+      }
+    },
     "%@ (ongoing)" : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "%@ (läuft)"
+          }
+        }
+      }
+    },
+    "%@ from the previous point" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ vom vorherigen Punkt"
           }
         }
       }
@@ -237,6 +267,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ein später beginnendes Segment läuft noch."
+          }
+        }
+      }
+    },
+    "Ask when moving or stationary" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bei Bewegung und Stillstand fragen"
           }
         }
       }
@@ -511,12 +551,32 @@
         }
       }
     },
-    "Delete all segments?" : {
+    "Delete all data?" : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Alle Segmente löschen?"
+            "value" : "Alle Daten löschen?"
+          }
+        }
+      }
+    },
+    "Delete all location points?" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alle Standortpunkte löschen?"
+          }
+        }
+      }
+    },
+    "Delete location points" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Standortpunkte löschen"
           }
         }
       }
@@ -547,6 +607,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Gelöscht: %@"
+          }
+        }
+      }
+    },
+    "Deletes all segments and location points. This cannot be undone. Export a CSV first if you want to keep a copy." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Löscht alle Segmente und Standortpunkte. Das kann nicht rückgängig gemacht werden. Exportiere vorher eine CSV-Datei, wenn du eine Kopie behalten möchtest."
           }
         }
       }
@@ -661,6 +731,56 @@
         }
       }
     },
+    "Estimated from your location points. Adjust it if needed." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aus deinen Standortpunkten geschätzt. Passe die Zeit bei Bedarf an."
+          }
+        }
+      }
+    },
+    "Every" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alle"
+          }
+        }
+      }
+    },
+    "Every %1$lld min the app switches on GPS for a few seconds and saves a location point on this iPhone. More than %2$@ from the previous point while not moving: “Moving detected”. Less than %3$@ in one interval while a moving segment runs: “Stationary detected”. Answer True or False. While points are recorded, these questions replace the motion reminders below." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alle %1$lld min schaltet die App für ein paar Sekunden GPS ein und speichert einen Standortpunkt auf diesem iPhone. Mehr als %2$@ vom vorherigen Punkt entfernt, während du dich nicht bewegst: «Bewegung erkannt». Weniger als %3$@ in einem Intervall, während ein Bewegungssegment läuft: «Stillstand erkannt». Antworte mit True oder False. Solange Punkte aufgezeichnet werden, ersetzen diese Fragen die Erinnerungen des Bewegungssensors unten."
+          }
+        }
+      }
+    },
+    "Every %lld min the app switches on GPS for a few seconds and saves a location point on this iPhone." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alle %lld min schaltet die App für ein paar Sekunden GPS ein und speichert einen Standortpunkt auf diesem iPhone."
+          }
+        }
+      }
+    },
+    "Every 5 minutes the app can save a location point – GPS is only switched on for a few seconds. If you are suddenly far away from the previous point, it asks whether you are on the move; if you hardly move during a trip, it asks whether you have arrived. Just answer True or False. The points stay on this iPhone, and you can change this any time in Settings." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alle 5 Minuten kann die App einen Standortpunkt speichern – GPS ist dabei nur ein paar Sekunden eingeschaltet. Bist du plötzlich weit vom vorherigen Punkt entfernt, fragt sie, ob du unterwegs bist; bewegst du dich während einer Fahrt kaum noch, fragt sie, ob du angekommen bist. Antworte einfach mit True oder False. Die Punkte bleiben auf diesem iPhone, und du kannst das jederzeit in den Einstellungen ändern."
+          }
+        }
+      }
+    },
     "Excel compatible (UTF-8 BOM)" : {
       "localizations" : {
         "de" : {
@@ -681,12 +801,42 @@
         }
       }
     },
+    "Export %lld location points as CSV" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld Standortpunkte als CSV exportieren"
+          }
+        }
+      }
+    },
     "Export %lld segments as CSV" : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "%lld Segmente als CSV exportieren"
+          }
+        }
+      }
+    },
+    "False" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "False"
+          }
+        }
+      }
+    },
+    "False – I am not moving" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "False – ich bin nicht unterwegs"
           }
         }
       }
@@ -781,6 +931,16 @@
         }
       }
     },
+    "How are you moving?" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wie bist du unterwegs?"
+          }
+        }
+      }
+    },
     "Import CSV" : {
       "localizations" : {
         "de" : {
@@ -811,6 +971,16 @@
         }
       }
     },
+    "Last %@" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zuletzt %@"
+          }
+        }
+      }
+    },
     "Last check" : {
       "localizations" : {
         "de" : {
@@ -821,12 +991,52 @@
         }
       }
     },
+    "Last point" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Letzter Punkt"
+          }
+        }
+      }
+    },
     "Location \"Always\"" : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Standort «Immer»"
+          }
+        }
+      }
+    },
+    "Location (GPS)" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Standort (GPS)"
+          }
+        }
+      }
+    },
+    "Location points" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Standortpunkte"
+          }
+        }
+      }
+    },
+    "Location questions are on: while location points are recorded, they replace these reminders." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Die GPS-Fragen sind aktiv: Solange Standortpunkte aufgezeichnet werden, ersetzen sie diese Erinnerungen."
           }
         }
       }
@@ -867,6 +1077,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Niedrig"
+          }
+        }
+      }
+    },
+    "Measure now" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jetzt messen"
           }
         }
       }
@@ -981,6 +1201,26 @@
         }
       }
     },
+    "Moving detected" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bewegung erkannt"
+          }
+        }
+      }
+    },
+    "Moving from" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bewegung ab"
+          }
+        }
+      }
+    },
     "New segment" : {
       "localizations" : {
         "de" : {
@@ -1021,12 +1261,22 @@
         }
       }
     },
-    "No account, no server, no tracking. Everything stays on this iPhone." : {
+    "No account, no server. Everything stays on this iPhone." : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Kein Konto, kein Server, kein Tracking. Alles bleibt auf diesem iPhone."
+            "value" : "Kein Konto, kein Server. Alles bleibt auf diesem iPhone."
+          }
+        }
+      }
+    },
+    "No accurate location points yet." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Noch keine genauen Standortpunkte."
           }
         }
       }
@@ -1041,6 +1291,26 @@
         }
       }
     },
+    "No location points on this day." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "An diesem Tag gibt es keine Standortpunkte."
+          }
+        }
+      }
+    },
+    "No location points yet. The first one follows within a few minutes." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Noch keine Standortpunkte. Der erste folgt in wenigen Minuten."
+          }
+        }
+      }
+    },
     "No movement detected in the last hours." : {
       "localizations" : {
         "de" : {
@@ -1051,12 +1321,12 @@
         }
       }
     },
-    "No reminders during quiet hours. Movements are still detected and shown in the app." : {
+    "No reminders or questions during quiet hours. Movements are still detected and shown in the app." : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Während der Ruhezeit gibt es keine Erinnerungen. Bewegungen werden trotzdem erkannt und in der App angezeigt."
+            "value" : "Während der Ruhezeit gibt es keine Erinnerungen und Fragen. Bewegungen werden trotzdem erkannt und in der App angezeigt."
           }
         }
       }
@@ -1067,6 +1337,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Es läuft kein Segment."
+          }
+        }
+      }
+    },
+    "No segment logged at this time" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zu dieser Zeit ist kein Segment erfasst"
           }
         }
       }
@@ -1087,6 +1367,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Noch keine Segmente"
+          }
+        }
+      }
+    },
+    "Not answered" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nicht beantwortet"
           }
         }
       }
@@ -1141,6 +1431,16 @@
         }
       }
     },
+    "Now: %1$@ since %2$@" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jetzt: %1$@ seit %2$@"
+          }
+        }
+      }
+    },
     "OK" : {
       "localizations" : {
         "de" : {
@@ -1157,6 +1457,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Unterwegs seit %1$@, vermutlich %2$@. Tippe, um das Segment zu erfassen."
+          }
+        }
+      }
+    },
+    "One row per point: time, coordinates, accuracy, the movement type logged at that time and your True/False answers. Uses the range and format above." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eine Zeile pro Punkt: Zeit, Koordinaten, Genauigkeit, die zu dieser Zeit erfasste Bewegungsart und deine True/False-Antworten. Verwendet den Zeitraum und das Format oben."
           }
         }
       }
@@ -1201,6 +1511,16 @@
         }
       }
     },
+    "Opens the map" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Öffnet die Karte"
+          }
+        }
+      }
+    },
     "Optional note" : {
       "localizations" : {
         "de" : {
@@ -1211,12 +1531,12 @@
         }
       }
     },
-    "Optional: reliable reminders" : {
+    "Optional: location points" : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Optional: zuverlässige Erinnerungen"
+            "value" : "Optional: Standortpunkte"
           }
         }
       }
@@ -1287,6 +1607,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Berechtigungen"
+          }
+        }
+      }
+    },
+    "Points today" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Punkte heute"
+          }
+        }
+      }
+    },
+    "Precise location is off" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Genauer Standort ist aus"
           }
         }
       }
@@ -1377,6 +1717,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Zeitraum"
+          }
+        }
+      }
+    },
+    "Record location points" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Standortpunkte aufzeichnen"
           }
         }
       }
@@ -1491,6 +1841,16 @@
         }
       }
     },
+    "Saves a location point every few minutes and asks True or False when you start moving or stop. GPS is only switched on briefly, the points stay on this iPhone and can be exported as CSV." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Speichert alle paar Minuten einen Standortpunkt und fragt True oder False, wenn du losgehst oder anhältst. GPS ist nur kurz eingeschaltet, die Punkte bleiben auf diesem iPhone und lassen sich als CSV exportieren."
+          }
+        }
+      }
+    },
     "Segment still running" : {
       "localizations" : {
         "de" : {
@@ -1527,6 +1887,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Semikolon ( ; )"
+          }
+        }
+      }
+    },
+    "Send a test GPS question" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "GPS-Testfrage senden"
           }
         }
       }
@@ -1597,6 +1967,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Einführung erneut anzeigen"
+          }
+        }
+      }
+    },
+    "Since %1$@ you have moved less than %2$@. Have you arrived?" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Seit %1$@ hast du dich weniger als %2$@ bewegt. Bist du angekommen?"
           }
         }
       }
@@ -1722,6 +2102,26 @@
         }
       }
     },
+    "Stationary below" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stillstand unter"
+          }
+        }
+      }
+    },
+    "Stationary detected" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stillstand erkannt"
+          }
+        }
+      }
+    },
     "Still running" : {
       "localizations" : {
         "de" : {
@@ -1833,6 +2233,16 @@
         }
       }
     },
+    "Tap a point for its time and accuracy. The colors show the logged segments." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tippe auf einen Punkt für Zeit und Genauigkeit. Die Farben zeigen die erfassten Segmente."
+          }
+        }
+      }
+    },
     "Tap a type to start a segment now, tap Stop when it ends." : {
       "localizations" : {
         "de" : {
@@ -1933,6 +2343,16 @@
         }
       }
     },
+    "The question arrives in 5 seconds. Touch and hold it to answer True or False." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Die Frage kommt in 5 Sekunden. Halte sie gedrückt, um mit True oder False zu antworten."
+          }
+        }
+      }
+    },
     "The reminder arrives in 5 seconds. Lock your iPhone to see it like a real one." : {
       "localizations" : {
         "de" : {
@@ -1969,16 +2389,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Der Start liegt in der Zukunft."
-          }
-        }
-      }
-    },
-    "This cannot be undone. Export a CSV first if you want to keep a copy." : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Das kann nicht rückgängig gemacht werden. Exportiere vorher eine CSV-Datei, wenn du eine Kopie behalten möchtest."
           }
         }
       }
@@ -2053,12 +2463,22 @@
         }
       }
     },
-    "Turn on reliable reminders" : {
+    "True" : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Zuverlässige Erinnerungen einschalten"
+            "value" : "True"
+          }
+        }
+      }
+    },
+    "True ends %1$@ at %2$@ and starts Stationary." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "True beendet %1$@ um %2$@ und startet Stillstand."
           }
         }
       }
@@ -2193,6 +2613,16 @@
         }
       }
     },
+    "Your segments are kept. Export the location points first if you want to keep a copy." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Deine Segmente bleiben erhalten. Exportiere die Standortpunkte vorher, wenn du eine Kopie behalten möchtest."
+          }
+        }
+      }
+    },
     "by bike" : {
       "localizations" : {
         "de" : {
@@ -2229,16 +2659,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "iOS lässt eine geschlossene App nur ab und zu den Bewegungssensor prüfen, daher können Erinnerungen verspätet kommen. Mit dieser Option weckt iOS die App, sobald du dich ein paar hundert Meter bewegst (benötigt Standortzugriff «Immer»). Dein Standort wird nie gespeichert oder irgendwohin gesendet."
-          }
-        }
-      }
-    },
-    "iOS only lets a closed app look at the motion sensor now and then. If you allow location access \"Always\", iOS wakes the app when you move a few hundred meters, so reminders arrive on time. The location itself is never stored. You can change this any time in Settings." : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "iOS lässt eine geschlossene App nur ab und zu auf den Bewegungssensor zugreifen. Wenn du den Standortzugriff «Immer» erlaubst, weckt iOS die App, sobald du dich ein paar hundert Meter bewegst – so kommen Erinnerungen pünktlich. Der Standort selbst wird nie gespeichert. Du kannst das jederzeit in den Einstellungen ändern."
           }
         }
       }

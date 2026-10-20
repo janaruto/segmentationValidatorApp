@@ -9,14 +9,15 @@
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>Optional: iOS wakes the app when you move a few hundred meters, so movement reminders arrive on time. Your location is never stored or shared.</string>
+	<string>Optional: the app saves a location point every few minutes and asks whether you are on the move or have arrived. iOS can also wake the app when you move. Location points stay on your iPhone and are never sent anywhere.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Optional: iOS wakes the app when you move a few hundred meters, so movement reminders arrive on time. Your location is never stored or shared.</string>
+	<string>Optional: the app saves a location point every few minutes and asks whether you are on the move or have arrived. iOS can also wake the app when you move. Location points stay on your iPhone and are never sent anywhere.</string>
 	<key>NSMotionUsageDescription</key>
 	<string>The motion sensor detects when you start moving, so the app can remind you to log the segment and suggest its start and end time.</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>fetch</string>
+		<string>location</string>
 	</array>
 </dict>
 </plist>

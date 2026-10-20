@@ -83,6 +83,7 @@ enum CSVExport {
 struct CSVFormatters {
     let date: DateFormatter
     let time: DateFormatter
+    let timeWithSeconds: DateFormatter
     let iso: ISO8601DateFormatter
 
     init(timeZone: TimeZone) {
@@ -101,6 +102,12 @@ struct CSVFormatters {
         time.calendar = calendar
         time.timeZone = timeZone
         time.dateFormat = "HH:mm"
+
+        timeWithSeconds = DateFormatter()
+        timeWithSeconds.locale = posix
+        timeWithSeconds.calendar = calendar
+        timeWithSeconds.timeZone = timeZone
+        timeWithSeconds.dateFormat = "HH:mm:ss"
 
         iso = ISO8601DateFormatter()
         iso.timeZone = timeZone

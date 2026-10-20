@@ -55,15 +55,31 @@ struct DetectionSettings: Codable, Equatable, Sendable {
     var quietHoursStart = 22 * 60
     /// Minutes after midnight.
     var quietHoursEnd = 7 * 60
-    /// Let iOS wake the app on significant location changes (location is never stored).
+    /// Let iOS wake the app on significant location changes (location is not stored).
     var useLocationWakeUps = false
     var suggestStationary = true
+
+    /// Save a location point every `locationInterval` minutes (on the phone only).
+    var locationTracking = false
+    /// Minutes between two location points.
+    var locationInterval = 5
+    /// Ask "Moving detected?" and "Stationary?" based on the location points.
+    var locationPrompts = true
+    /// "Moving detected?" when farther than this from the previous point (meters).
+    var movingDistance = 400
+    /// "Stationary?" when closer than this to the previous point (meters).
+    var stationaryDistance = 150
+
+    static let locationIntervalChoices = [1, 2, 5, 10, 15, 30]
+    static let movingDistanceChoices = [200, 300, 400, 500, 750, 1000]
+    static let stationaryDistanceChoices = [50, 100, 150, 200, 300]
 
     init() {}
 
     private enum CodingKeys: String, CodingKey {
         case remindersEnabled, sensitivity, timing, quietHoursEnabled, quietHoursStart, quietHoursEnd
         case useLocationWakeUps, suggestStationary
+        case locationTracking, locationInterval, locationPrompts, movingDistance, stationaryDistance
     }
 
     // Lenient decoding: unknown or missing values fall back to the defaults.
@@ -78,6 +94,14 @@ struct DetectionSettings: Codable, Equatable, Sendable {
         quietHoursEnd = (try? container.decodeIfPresent(Int.self, forKey: .quietHoursEnd)) ?? defaults.quietHoursEnd
         useLocationWakeUps = (try? container.decodeIfPresent(Bool.self, forKey: .useLocationWakeUps)) ?? defaults.useLocationWakeUps
         suggestStationary = (try? container.decodeIfPresent(Bool.self, forKey: .suggestStationary)) ?? defaults.suggestStationary
+        locationTracking = (try? container.decodeIfPresent(Bool.self, forKey: .locationTracking)) ?? defaults.locationTracking
+        locationPrompts = (try? container.decodeIfPresent(Bool.self, forKey: .locationPrompts)) ?? defaults.locationPrompts
+        let interval = (try? container.decodeIfPresent(Int.self, forKey: .locationInterval)) ?? defaults.locationInterval
+        locationInterval = min(max(interval, 1), 60)
+        let moving = (try? container.decodeIfPresent(Int.self, forKey: .movingDistance)) ?? defaults.movingDistance
+        movingDistance = min(max(moving, 50), 10_000)
+        let stationary = (try? container.decodeIfPresent(Int.self, forKey: .stationaryDistance)) ?? defaults.stationaryDistance
+        stationaryDistance = min(max(stationary, 20), 5_000)
     }
 }
 
@@ -145,6 +169,8 @@ enum ReminderOutcome: String, Codable, Sendable {
     case quietHours
     case coolingDown
     case sent
+    /// The location questions ("Moving detected?") take over while location points are recorded.
+    case locationActive
 }
 
 /// Decides whether a reminder notification should be sent right now.
@@ -303,18 +329,21 @@ enum ReminderEngine {
     }
 }
 
-/// The two kinds of reminder notifications.
+/// The kinds of reminder notifications.
 enum ReminderNotification: Equatable, Sendable {
     /// "Movement detected": log the new movement.
     case movement(Reminder)
     /// "Segment still running": end a forgotten live segment.
     case staleSegment(StaleSegmentReminder)
+    /// "Moving detected?" or "Stationary?" from the location points: answer True or False.
+    case location(LocationPrompt)
 }
 
 /// Converts reminders to and from a notification's `userInfo`.
 enum ReminderPayload {
     static let movementKind = "movement-reminder"
     static let staleKind = "stale-segment"
+    static let locationKind = "location-prompt"
 
     static func userInfo(for reminder: Reminder) -> [String: Any] {
         var info: [String: Any] = [
@@ -338,10 +367,38 @@ enum ReminderPayload {
         ]
     }
 
+    static func userInfo(for prompt: LocationPrompt) -> [String: Any] {
+        var info: [String: Any] = [
+            "kind": locationKind,
+            "point": prompt.id.uuidString,
+            "question": prompt.kind.rawValue,
+            "askedAt": prompt.askedAt.timeIntervalSinceReferenceDate,
+            "since": prompt.since.timeIntervalSinceReferenceDate,
+            "distance": prompt.distance,
+        ]
+        if let segmentID = prompt.segmentID {
+            info["segment"] = segmentID.uuidString
+        }
+        return info
+    }
+
     static func notification(from userInfo: [AnyHashable: Any]) -> ReminderNotification? {
         switch userInfo["kind"] as? String {
         case movementKind:
             return reminder(from: userInfo).map { .movement($0) }
+        case locationKind:
+            guard let id = (userInfo["point"] as? String).flatMap(UUID.init(uuidString:)),
+                  let kind = (userInfo["question"] as? String).flatMap(LocationPromptKind.init(rawValue:)),
+                  let askedAt = number(userInfo["askedAt"]),
+                  let since = number(userInfo["since"]) else { return nil }
+            return .location(LocationPrompt(
+                id: id,
+                kind: kind,
+                askedAt: Date(timeIntervalSinceReferenceDate: askedAt),
+                since: Date(timeIntervalSinceReferenceDate: since),
+                distance: number(userInfo["distance"]) ?? 0,
+                segmentID: (userInfo["segment"] as? String).flatMap(UUID.init(uuidString:))
+            ))
         case staleKind:
             guard let id = (userInfo["segment"] as? String).flatMap(UUID.init(uuidString:)),
                   let type = (userInfo["type"] as? String).flatMap(MovementType.init(rawValue:)),

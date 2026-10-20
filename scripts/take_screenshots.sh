@@ -34,6 +34,8 @@ echo "Using simulator $DEVICE"
 xcrun simctl boot "$DEVICE" 2>/dev/null || true
 xcrun simctl bootstatus "$DEVICE" -b
 xcrun simctl status_bar "$DEVICE" override --time "9:41" --batteryState charged --batteryLevel 100 --wifiBars 3 --cellularBars 4 || true
+# Zurich main station, for the location points.
+xcrun simctl location "$DEVICE" set 47.3779,8.5403 || true
 
 shot() {
     local name="$1"
@@ -52,6 +54,7 @@ for lang in en de; do
     # Fresh install: the introduction is shown first.
     xcrun simctl uninstall "$DEVICE" "$BUNDLE_ID" 2>/dev/null || true
     xcrun simctl install "$DEVICE" "$APP"
+    xcrun simctl privacy "$DEVICE" grant location-always "$BUNDLE_ID" || true
     shot "$lang-01-onboarding" "${common[@]}"
 
     ready=("${common[@]}" -hasCompletedOnboarding YES -debugSeedDemoData YES -debugFakeDetections YES)
@@ -61,5 +64,8 @@ for lang in en de; do
     shot "$lang-05-new-segment" "${ready[@]}" -debugShowYesterday YES -debugOpenEditor new
     shot "$lang-06-history" "${ready[@]}" -debugInitialTab history
     shot "$lang-07-export" "${ready[@]}" -debugInitialTab export
-    shot "$lang-08-settings" "${ready[@]}" -debugInitialTab settings
+    shot "$lang-08-location-question" "${ready[@]}" -debugLocationPrompt YES
+    shot "$lang-09-map" "${ready[@]}" -debugOpenMap YES
+    # Last, because it turns on location tracking for good.
+    shot "$lang-10-settings" "${ready[@]}" -debugInitialTab settings -debugLocationTracking YES
 done

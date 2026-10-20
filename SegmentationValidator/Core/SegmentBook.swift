@@ -48,6 +48,26 @@ struct SegmentBook: Equatable, Sendable {
         segments.first(where: { $0.id != id && $0.start > date })
     }
 
+    /// The segment logged at `date`; the one that started last if several overlap.
+    func segment(at date: Date, now: Date) -> Segment? {
+        // Binary search for the number of segments that start at or before `date`.
+        var low = 0
+        var high = segments.count
+        while low < high {
+            let middle = (low + high) / 2
+            if segments[middle].start <= date {
+                low = middle + 1
+            } else {
+                high = middle
+            }
+        }
+        // Usually the latest of them; look a little further back for long, overlapping ones.
+        for segment in segments[..<low].reversed().prefix(50) where segment.effectiveEnd(now: now) > date {
+            return segment
+        }
+        return nil
+    }
+
     // MARK: - Validation
 
     func validate(_ draft: SegmentDraft, now: Date) -> DraftValidation {
@@ -163,7 +183,12 @@ struct SegmentBook: Equatable, Sendable {
 
     /// Live logging: starts a running segment now and ends the one that was running.
     @discardableResult
-    mutating func startLive(_ type: MovementType, at date: Date, detectedActivity: DetectedActivity? = nil) -> Segment {
+    mutating func startLive(
+        _ type: MovementType,
+        at date: Date,
+        source: Segment.Source = .live,
+        detectedActivity: DetectedActivity? = nil
+    ) -> Segment {
         let start = date.flooredToMinute
         // Picking another type within the same minute just corrects the running segment.
         if let index = segments.firstIndex(where: { $0.isRunning && $0.start >= start }) {
@@ -175,7 +200,7 @@ struct SegmentBook: Equatable, Sendable {
             segments[index].end = start
             segments[index].updatedAt = date
         }
-        let segment = Segment(start: start, end: nil, type: type, source: .live, detectedActivity: detectedActivity, createdAt: date)
+        let segment = Segment(start: start, end: nil, type: type, source: source, detectedActivity: detectedActivity, createdAt: date)
         segments.append(segment)
         sortSegments()
         return segment
