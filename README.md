@@ -152,6 +152,17 @@ Note that an older Xcode may not be able to install apps on an iPhone with a new
 4. Connect the iPhone with a cable, select it as run destination and press ▶︎.
 5. On the iPhone: enable *Developer Mode* and trust your Apple ID as in Option A, step 4.
 
+**Updating** to the newest version: in Terminal run
+
+```
+cd ~/codingprojects/segmentationValidatorApp && scripts/update.sh
+```
+
+and press ▶︎ in Xcode. The script keeps your team and bundle identifier. Other local changes are
+replaced by the GitHub version – Xcode edits some files by itself while building (e.g. the string
+catalogs), which would otherwise block `git pull`. With a free Apple ID, press ▶︎ again at least every
+7 days; your data stays on the iPhone as long as you don't delete the app.
+
 ## CSV format
 
 One row per segment, sorted by start time. Times are local time; the ISO columns include the UTC
