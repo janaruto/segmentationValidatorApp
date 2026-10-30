@@ -651,6 +651,16 @@
         }
       }
     },
+    "Each time you start, switch or stop a segment, an extra point is taken right away." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jedes Mal, wenn du ein Segment startest, wechselst oder stoppst, wird sofort ein zusätzlicher Punkt gemessen."
+          }
+        }
+      }
+    },
     "Edit" : {
       "localizations" : {
         "de" : {
@@ -2213,6 +2223,16 @@
         }
       }
     },
+    "Taken when you changed the segment" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Beim Wechsel des Segments gemessen"
+          }
+        }
+      }
+    },
     "Tap Add segment to log what you did on this day." : {
       "localizations" : {
         "de" : {
@@ -2233,12 +2253,12 @@
         }
       }
     },
-    "Tap a point for its time and accuracy. The colors show the logged segments." : {
+    "Tap a point for its time and accuracy. The colors show the logged segments; white dots were taken when you changed the segment." : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Tippe auf einen Punkt für Zeit und Genauigkeit. Die Farben zeigen die erfassten Segmente."
+            "value" : "Tippe auf einen Punkt für Zeit und Genauigkeit. Die Farben zeigen die erfassten Segmente, weisse Punkte wurden beim Wechsel des Segments gemessen."
           }
         }
       }

@@ -7,6 +7,8 @@ struct LocationPoint: Codable, Identifiable, Hashable, Sendable {
     enum Trigger: String, Codable, CaseIterable, Sendable {
         /// The regular measurement every few minutes.
         case interval
+        /// Taken right when the user started, switched or stopped a segment, to locate the change.
+        case segmentChange = "segment_change"
         /// Taken when the app was opened and a point was due.
         case appOpened = "app_opened"
         /// iOS woke the app after a larger movement.

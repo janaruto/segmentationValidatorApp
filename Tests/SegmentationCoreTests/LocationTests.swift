@@ -208,6 +208,20 @@ final class LocationPromptEngineTests: XCTestCase {
         XCTAssertTrue(off.prompts.allSatisfy { $0 == nil })
     }
 
+    func testAPointAtASegmentChangeIsTheStartOfTheComparison() {
+        // Walking started by tapping at 14:07:45 (the segment starts at 14:07); a point was taken right away.
+        let walk = makeSegment(.walking, "2026-10-15 14:07", nil)
+        var change = point("2026-10-15 14:07:52", north: 10)
+        change.trigger = .segmentChange
+        let result = run([
+            point("2026-10-15 14:05"),
+            change,
+            point("2026-10-15 14:12:52", north: 60),
+        ], running: walk)
+        XCTAssertEqual(result.prompts.map { $0?.kind }, [nil, nil, .stationary], "One interval after the change")
+        XCTAssertEqual(result.prompts[2]?.since, TestClock.date("2026-10-15 14:07:52"))
+    }
+
     func testCustomDistances() {
         var settings = DetectionSettings()
         settings.movingDistance = 1000
@@ -345,7 +359,9 @@ final class LocationCSVTests: XCTestCase {
         asked.prompt = .moving
         asked.answer = true
         asked.speed = 1.4
-        let points = [asked, point("2026-10-15 09:10")]
+        var change = point("2026-10-15 09:12:20", north: 300)
+        change.trigger = .segmentChange
+        let points = [asked, change, point("2026-10-15 09:10")]
 
         let csv = LocationCSVExport.csv(
             for: points,
@@ -356,7 +372,7 @@ final class LocationCSVTests: XCTestCase {
         )
         let rows = CSVParser.rows(from: csv)
         XCTAssertEqual(rows.first, LocationCSVExport.columns)
-        XCTAssertEqual(rows.count, 3)
+        XCTAssertEqual(rows.count, 4)
 
         func value(_ row: Int, _ column: String) -> String {
             rows[row][LocationCSVExport.columns.firstIndex(of: column)!]
@@ -369,15 +385,18 @@ final class LocationCSVTests: XCTestCase {
         XCTAssertEqual(value(1, "distance_m"), "")
         XCTAssertEqual(value(1, "prompt"), "")
         XCTAssertEqual(value(1, "answer"), "")
-        XCTAssertEqual(value(2, "movement_type"), "walking", "The running segment counts until now")
-        XCTAssertEqual(value(2, "distance_m"), "650")
-        XCTAssertEqual(value(2, "accuracy_m"), "8.3")
-        XCTAssertEqual(value(2, "speed_mps"), "1.40")
-        XCTAssertEqual(value(2, "altitude_m"), "")
-        XCTAssertEqual(value(2, "trigger"), "interval")
-        XCTAssertEqual(value(2, "prompt"), "moving")
-        XCTAssertEqual(value(2, "answer"), "true")
-        XCTAssertEqual(value(2, "id"), asked.id.uuidString.lowercased())
+        XCTAssertEqual(value(2, "trigger"), "segment_change")
+        XCTAssertEqual(value(2, "movement_type"), "walking")
+        XCTAssertEqual(value(2, "distance_m"), "300")
+        XCTAssertEqual(value(3, "movement_type"), "walking", "The running segment counts until now")
+        XCTAssertEqual(value(3, "distance_m"), "350")
+        XCTAssertEqual(value(3, "accuracy_m"), "8.3")
+        XCTAssertEqual(value(3, "speed_mps"), "1.40")
+        XCTAssertEqual(value(3, "altitude_m"), "")
+        XCTAssertEqual(value(3, "trigger"), "interval")
+        XCTAssertEqual(value(3, "prompt"), "moving")
+        XCTAssertEqual(value(3, "answer"), "true")
+        XCTAssertEqual(value(3, "id"), asked.id.uuidString.lowercased())
 
         let semicolon = LocationCSVExport.csv(
             for: points,

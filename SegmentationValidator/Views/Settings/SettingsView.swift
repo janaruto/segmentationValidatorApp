@@ -254,17 +254,20 @@ struct SettingsView: View {
         } header: {
             Text("Location (GPS)")
         } footer: {
-            if settings.locationTracking && settings.locationPrompts {
-                Text(L10n.format(
-                    "Every %1$lld min the app switches on GPS for a few seconds and saves a location point on this iPhone. More than %2$@ from the previous point while not moving: “Moving detected”. Less than %3$@ in one interval while a moving segment runs: “Stationary detected”. Answer True or False. While points are recorded, these questions replace the motion reminders below.",
-                    settings.locationInterval,
-                    Formatting.distance(Double(settings.movingDistance)),
-                    Formatting.distance(Double(settings.stationaryDistance))
-                ))
-            } else if settings.locationTracking {
-                Text(L10n.format("Every %lld min the app switches on GPS for a few seconds and saves a location point on this iPhone.", settings.locationInterval))
-            } else {
-                Text("Saves a location point every few minutes and asks True or False when you start moving or stop. GPS is only switched on briefly, the points stay on this iPhone and can be exported as CSV.")
+            VStack(alignment: .leading, spacing: 6) {
+                if settings.locationTracking && settings.locationPrompts {
+                    Text(L10n.format(
+                        "Every %1$lld min the app switches on GPS for a few seconds and saves a location point on this iPhone. More than %2$@ from the previous point while not moving: “Moving detected”. Less than %3$@ in one interval while a moving segment runs: “Stationary detected”. Answer True or False. While points are recorded, these questions replace the motion reminders below.",
+                        settings.locationInterval,
+                        Formatting.distance(Double(settings.movingDistance)),
+                        Formatting.distance(Double(settings.stationaryDistance))
+                    ))
+                } else if settings.locationTracking {
+                    Text(L10n.format("Every %lld min the app switches on GPS for a few seconds and saves a location point on this iPhone.", settings.locationInterval))
+                } else {
+                    Text("Saves a location point every few minutes and asks True or False when you start moving or stop. GPS is only switched on briefly, the points stay on this iPhone and can be exported as CSV.")
+                }
+                Text("Each time you start, switch or stop a segment, an extra point is taken right away.")
             }
         }
     }

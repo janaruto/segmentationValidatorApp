@@ -143,7 +143,8 @@ struct LocationMapSheet: View {
                         PointDot(
                             color: Route.color(for: model.book.segment(at: point.timestamp, now: .now)?.type),
                             isSelected: selection == point.id,
-                            isQuestion: point.prompt != nil
+                            isQuestion: point.prompt != nil,
+                            isChange: point.trigger == .segmentChange
                         )
                     }
                     .annotationTitles(.hidden)
@@ -180,7 +181,7 @@ struct LocationMapSheet: View {
             } else {
                 Text(Route.summary(points: points))
                     .font(.headline)
-                Text("Tap a point for its time and accuracy. The colors show the logged segments.")
+                Text("Tap a point for its time and accuracy. The colors show the logged segments; white dots were taken when you changed the segment.")
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }
@@ -217,6 +218,11 @@ private struct PointDetails: View {
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }
+            if point.trigger == .segmentChange {
+                Label("Taken when you changed the segment", systemImage: "arrow.triangle.2.circlepath")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
             if let kind = point.prompt {
                 Text(verbatim: "\(kind.title): \(answerText)")
                     .font(.caption.weight(.semibold))
@@ -239,13 +245,15 @@ struct PointDot: View {
     let color: Color
     var isSelected = false
     var isQuestion = false
+    /// Taken at a segment change: a white dot with a colored ring.
+    var isChange = false
 
     var body: some View {
-        let size: CGFloat = isSelected ? 16 : (isQuestion ? 12 : 9)
+        let size: CGFloat = isSelected ? 16 : (isQuestion || isChange ? 13 : 9)
         Circle()
-            .fill(color)
+            .fill(isChange ? Color.white : color)
             .frame(width: size, height: size)
-            .overlay(Circle().stroke(.white, lineWidth: isSelected ? 3 : 1.5))
+            .overlay(Circle().stroke(isChange ? color : Color.white, lineWidth: isChange ? 3.5 : (isSelected ? 3 : 1.5)))
             .shadow(color: .black.opacity(0.25), radius: 1.5, y: 0.5)
     }
 }

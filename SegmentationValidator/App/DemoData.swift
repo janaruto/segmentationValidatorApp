@@ -89,7 +89,7 @@ enum DemoData {
             }
             return winterthur
         }
-        return stride(from: -180, through: 0, by: 5).enumerated().map { index, minute in
+        let regular = stride(from: -180, through: 0, by: 5).enumerated().map { index, minute in
             let (latitude, longitude) = position(at: Double(minute))
             // A little GPS noise (about 10 m), the same on every run.
             let jitter = Double((index * 37) % 7 - 3) * 0.00004
@@ -101,6 +101,18 @@ enum DemoData {
                 trigger: .interval
             )
         }
+        // The extra points taken when the demo segments were started or stopped.
+        let changes = [-95.0, -84, -60, -52, -40].map { minute in
+            let (latitude, longitude) = position(at: minute + 0.3)
+            return LocationPoint(
+                timestamp: base.addingTimeInterval((minute + 0.3) * 60),
+                latitude: latitude,
+                longitude: longitude,
+                accuracy: 6,
+                trigger: .segmentChange
+            )
+        }
+        return (regular + changes).sorted { $0.timestamp < $1.timestamp }
     }
 
     /// "Stationary?" while a moving segment runs (the train just stopped), otherwise "Moving detected?".

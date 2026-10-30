@@ -73,6 +73,9 @@ Optionally the app saves a **GPS location point every 5 minutes** and asks *Movi
   on. Both distances are adjustable, quiet hours apply
 - While location points are recorded, these questions replace the motion sensor reminders, so you never
   get two notifications for the same movement
+- **Every change you make yourself** – tapping a type, *Switch*, *Stop*, the Shortcuts actions or a segment
+  in the editor that starts or ends now – takes an extra point right away, so you know where the change
+  happened (`trigger` = `segment_change` in the CSV, white dots on the map)
 - **Map** of each day's points on the day screen, colored by the logged movement type. Tap a point for
   its time, accuracy, distance and your answer
 - The answers are stored with the points (`prompt`, `answer` columns), so the detection can be evaluated
@@ -189,7 +192,7 @@ One row per location point, oldest first (*Export → Location points*).
 | `altitude_m`, `speed_mps` | `412.3`, `1.40` | If known |
 | `distance_m` | `652` | Distance from the previous point in the file |
 | `movement_type` | `walking` | The segment logged at that time (empty in gaps) |
-| `trigger` | `interval` | `interval`, `app_opened`, `wake_up`, `manual` |
+| `trigger` | `interval` | Why the point was taken: `interval` (every 5 min), `segment_change` (you started, switched or stopped a segment), `app_opened`, `wake_up`, `manual` |
 | `prompt` | `moving` | Question asked because of this point: `moving` or `stationary` |
 | `answer` | `true` | Your answer: `true`, `false` or empty |
 | `id` | `0b6f…` | Stable id |

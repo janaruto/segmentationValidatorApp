@@ -286,7 +286,12 @@ final class AppModel {
             alert = AppAlert(title: String(localized: "Cannot save"), message: error.localizedDescription)
             return false
         }
-        return commit(updated)
+        guard commit(updated) else { return false }
+        // A segment that starts or ends right now (e.g. "End now" in the editor) is a change too.
+        if let boundary = [draft.start, draft.end].compactMap({ $0 }).first(where: { abs($0.timeIntervalSinceNow) <= 120 }) {
+            measureSegmentChange(at: boundary)
+        }
+        return true
     }
 
     func delete(_ segment: Segment) {
@@ -317,13 +322,22 @@ final class AppModel {
     func startLive(_ type: MovementType) {
         var updated = book
         updated.startLive(type, at: .now)
-        commit(updated)
+        if commit(updated) {
+            measureSegmentChange()
+        }
     }
 
     func stopLive() {
         var updated = book
-        guard updated.stopLive(at: .now) != nil else { return }
-        commit(updated)
+        guard updated.stopLive(at: .now) != nil, commit(updated) else { return }
+        measureSegmentChange()
+    }
+
+    /// Takes a location point right away when the user changes the segment now (start,
+    /// switch, stop), so the place of the change is known and not only the regular points.
+    private func measureSegmentChange(at date: Date = Date()) {
+        guard settings.locationTracking, abs(date.timeIntervalSinceNow) <= 120 else { return }
+        tracker.measure(.segmentChange)
     }
 
     func deleteAllData() {
@@ -926,6 +940,7 @@ final class AppModel {
         updated.startLive(type, at: at, source: .location)
         guard commit(updated) else { return false }
         answer(prompt, with: true)
+        measureSegmentChange(at: at)
         return true
     }
 
@@ -940,6 +955,7 @@ final class AppModel {
         let at = min(max(prompt.since, running.start.addingTimeInterval(60)), Date())
         let stationary = updated.startLive(.stationary, at: at, source: .location)
         guard commit(updated) else { return }
+        measureSegmentChange(at: at)
         // Compare the next points with the place where the user stopped.
         locationState.segmentID = stationary.id
         locationState.anchor = locationState.previous

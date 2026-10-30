@@ -112,9 +112,15 @@ final class LocationTracker: NSObject, CLLocationManagerDelegate {
         }
     }
 
-    /// Takes a point now.
+    /// Takes a point now. A segment change replaces a measurement that is already running,
+    /// so that the point shows where the change happened.
     func measure(_ trigger: LocationPoint.Trigger) {
-        guard isTracking, measurement == nil else { return }
+        guard isTracking else { return }
+        if let running = measurement {
+            guard trigger == .segmentChange else { return }
+            running.timeout.invalidate()
+            measurement = nil
+        }
         nextTimer?.invalidate()
         nextTimer = nil
         let now = Date()
